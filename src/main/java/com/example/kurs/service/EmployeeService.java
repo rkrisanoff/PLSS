@@ -66,7 +66,7 @@ public class EmployeeService {
         return employee;
     }
     public Employee update(Employee employee){
-        if (employeeRepo.findById(employee.getId()).orElse(null) != null){
+        if (employee.getId() != null && employeeRepo.findById(employee.getId()).orElse(null) != null){
             employeeRepo.save(employee);
             log.info("Updated employee {}.", employee.getUsername());
             return employee;

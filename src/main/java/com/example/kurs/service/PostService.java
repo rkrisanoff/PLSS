@@ -14,7 +14,7 @@ public class PostService {
     @Autowired
     private PostRepo postRepo;
     public Post createPost(Post post){
-        if (post.getId() == null || postRepo.findById(post.getId()).orElse(null) != null){
+        if (post.getId() == null || postRepo.findById(post.getId()).orElse(null) == null){
             postRepo.save(post);
             log.info("Created post, employee: {}, role: {}.", post.getEmployeeId(), post.getRoleId());
             return post;
@@ -44,7 +44,7 @@ public class PostService {
     }
 
     public Post update(Post post){
-        if (postRepo.findById(post.getId()).orElse(null) != null){
+        if (post.getId() != null && postRepo.findById(post.getId()).orElse(null) != null){
             postRepo.save(post);
             log.info("Updated post {}", post.getId());
             return post;

@@ -3,10 +3,13 @@ package com.example.kurs.controller;
 import com.example.kurs.dto.AuthenticationRequestDto;
 import com.example.kurs.dto.RegistrationRequestDto;
 import com.example.kurs.entity.Employee;
+import com.example.kurs.entity.Post;
 import com.example.kurs.exceptions.EmployeeAlreadyExistsException;
 import com.example.kurs.repo.EmployeeRepo;
+import com.example.kurs.repo.PostRepo;
 import com.example.kurs.security.jwt.JwtTokenProvider;
 import com.example.kurs.service.EmployeeService;
+import com.example.kurs.service.PostService;
 import com.example.kurs.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +38,12 @@ public class AuthController {
     private EmployeeService employeeService;
 
     @Autowired
+    private PostService postService;
+
+    @Autowired
     private RoleService roleService;
+    @Autowired
+    private PostRepo postRepo;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto){
@@ -73,8 +81,15 @@ public class AuthController {
             registerEmployee.setFirst_name(requestDto.getFirst_name());
             registerEmployee.setLast_name(requestDto.getLast_name());
             registerEmployee.setPatronymic(requestDto.getPatronymic());
-
             Employee registered = employeeService.register(registerEmployee);
+
+
+            Post registerPost = new Post();
+            registerPost.setDepartmentId(1L);
+            registerPost.setEmployeeId(employeeService.findByUsername(username).getId());
+            registerPost.setRoleId(roleService.findByName("operator").getId());
+            registerPost.setPremium(0);
+            postService.createPost(registerPost);
             if (registered == null){
                 return ResponseEntity.badRequest().body("User " + username + " already exists");
             }

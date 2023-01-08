@@ -16,11 +16,7 @@ public class Employee {
     private String password;
     private Integer age;
     private String gender;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "employee_role",
-    joinColumns = {@JoinColumn(name = "employee_id", referencedColumnName = "id")},
-    inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    @Transient
     private List<Role> roles;
 
     public String getFirst_name() {

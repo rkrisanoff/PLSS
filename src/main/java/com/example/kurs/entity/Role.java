@@ -12,8 +12,8 @@ public class Role {
     private String name;
     private Integer salary;
     private Boolean can_operate_robot;
-    @ManyToMany(mappedBy = "roles")
-    private List<Employee> employees;
+    @Transient
+    private List<Role> roles;
 
     public Role() {
     }
@@ -50,11 +50,11 @@ public class Role {
         this.can_operate_robot = can_operate_robot;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
+    public List<Role> getRoles() {
+        return roles;
     }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

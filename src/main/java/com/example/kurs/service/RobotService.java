@@ -45,7 +45,7 @@ public class RobotService {
     }
 
     public Robot create(Robot robot){
-        if (robot.getId() == null || robotRepo.findById(robot.getId()).orElse(null) != null){
+        if (robot.getId() != null && robotRepo.findById(robot.getId()).orElse(null) != null){
             log.info("Robot {} already exists.", robot.getId());
             return null;
         }

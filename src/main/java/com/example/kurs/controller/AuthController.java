@@ -12,6 +12,7 @@ import com.example.kurs.service.EmployeeService;
 import com.example.kurs.service.PostService;
 import com.example.kurs.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

@@ -10,7 +10,7 @@ public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer extracted_bor_quantity;
+    private Double extracted_bor_quantity;
     private Integer current_resource;
 
     public Department() {
@@ -24,11 +24,11 @@ public class Department {
         this.id = id;
     }
 
-    public Integer getExtracted_bor_quantity() {
+    public Double getExtracted_bor_quantity() {
         return extracted_bor_quantity;
     }
 
-    public void setExtracted_bor_quantity(Integer extracted_bor_quantity) {
+    public void setExtracted_bor_quantity(Double extracted_bor_quantity) {
         this.extracted_bor_quantity = extracted_bor_quantity;
     }
 

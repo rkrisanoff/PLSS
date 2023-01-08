@@ -8,6 +8,6 @@ public class RobotDto {
     private Long body_series;
     private Long eye_series;
     private Long operator_post_id;
-    private Integer hit_points;
+    private Double hit_points;
     private Long asteroid_id;
 }

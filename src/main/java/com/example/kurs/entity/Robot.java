@@ -15,7 +15,7 @@ public class Robot {
     private Long eye_series;
     private Long operator_post_id;
     private Long asteroid_id;
-    private Integer hit_points;
+    private Double hit_points;
 
     public Robot() {
     }
@@ -68,11 +68,11 @@ public class Robot {
         this.asteroid_id = asteroid_id;
     }
 
-    public Integer getHit_points() {
+    public Double getHit_points() {
         return hit_points;
     }
 
-    public void setHit_points(Integer hit_points) {
+    public void setHit_points(Double hit_points) {
         this.hit_points = hit_points;
     }
 }

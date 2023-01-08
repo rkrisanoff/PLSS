@@ -1,13 +1,14 @@
 package com.example.kurs.controller;
 
+import com.example.kurs.dto.ExtractRequestDto;
 import com.example.kurs.dto.RobotDto;
 import com.example.kurs.entity.Robot;
 import com.example.kurs.service.RobotService;
+import com.example.kurs.service.extraction.ExtractionStatus;
 import com.example.kurs.utils.JsonProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,5 +65,38 @@ public class RobotController {
         return ResponseEntity.ok("Updated");
     }
 
-
+    @PostMapping("/{id}/extract")
+    public ResponseEntity extract(@PathVariable Long id, @RequestBody ExtractRequestDto requestDto){
+        Long department_id = requestDto.getDepartment_id();
+        Long deposit_id = requestDto.getDeposit_id();
+        Robot robot = robotService.findById(id);
+        ExtractionStatus status = robotService.extract(robot,deposit_id, department_id);
+        String msg = "OK";
+        switch (status){
+            case OK:
+                return ResponseEntity.ok(msg);
+            case ROBOT_DEAD:
+                msg = "Extracted. Robot dead.";
+                break;
+            case NO_BORON:
+                msg = "Deposit is empty.";
+                break;
+            case NO_BRAIN:
+                msg = "Robot has no brain.";
+                break;
+            case NO_DEPARTMENT:
+                msg = "Department not found.";
+                break;
+            case NO_DEPOSIT:
+                msg = "Deposit not found.";
+                break;
+            case NOT_ON_TARGET_ASTEROID:
+                msg = "Robot is not on target asteroid. Move it.";
+                break;
+            default:
+                msg = "Some error occurred";
+                break;
+        }
+        return ResponseEntity.badRequest().body(msg);
+    }
 }

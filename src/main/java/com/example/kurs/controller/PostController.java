@@ -56,7 +56,7 @@ public class PostController {
         post.setPremium(postDto.getPremium() != null ? postDto.getPremium() : origin.getPremium());
         post.setId(origin.getId());
         Post updated = postService.update(post);
-            return ResponseEntity.ok("Updated");
+        return ResponseEntity.ok("Updated");
     }
 
     @PostMapping("/create")

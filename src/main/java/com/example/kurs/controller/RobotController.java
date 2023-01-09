@@ -2,7 +2,9 @@ package com.example.kurs.controller;
 
 import com.example.kurs.dto.ExtractRequestDto;
 import com.example.kurs.dto.RobotDto;
+import com.example.kurs.entity.Body;
 import com.example.kurs.entity.Robot;
+import com.example.kurs.service.BodyService;
 import com.example.kurs.service.RobotService;
 import com.example.kurs.service.extraction.ExtractionStatus;
 import com.example.kurs.utils.JsonProvider;
@@ -20,6 +22,8 @@ public class RobotController {
     private RobotService robotService;
     @Autowired
     private JsonProvider jsonProvider;
+    @Autowired
+    private BodyService bodyService;
 
     @GetMapping("/all")
     public ResponseEntity getAll() throws JsonProcessingException {
@@ -32,11 +36,20 @@ public class RobotController {
     public ResponseEntity create(@RequestBody RobotDto robotDto){
         Robot robot = new Robot();
         robot.setAsteroid_id(robotDto.getAsteroid_id());
+        if (robotDto.getBody_series() == null){
+            return ResponseEntity.badRequest().body("No body specified.");
+        }
         robot.setBody_series(robotDto.getBody_series());
+        if (robotDto.getBrain_series() == null){
+            return ResponseEntity.badRequest().body("No brain specified.");
+        }
         robot.setBrain_series(robotDto.getBrain_series());
+        if (robotDto.getEye_series() == null){
+            return ResponseEntity.badRequest().body("No eyes specified.");
+        }
         robot.setEye_series(robotDto.getEye_series());
         robot.setOperator_post_id(robotDto.getOperator_post_id());
-        robot.setHit_points(robotDto.getHit_points());
+        robot.setHit_points(bodyService.findById(robotDto.getBody_series()).getMax_hit_points());
         robotService.create(robot);
         return ResponseEntity.ok("Created");
     }
@@ -59,9 +72,22 @@ public class RobotController {
         robot.setBrain_series(robotDto.getBrain_series() != null ? robotDto.getBrain_series() : origin.getBrain_series());
         robot.setEye_series(robotDto.getEye_series() != null ? robotDto.getEye_series() : origin.getEye_series());
         robot.setOperator_post_id(robotDto.getOperator_post_id() != null ? robotDto.getOperator_post_id() : origin.getOperator_post_id());
-        robot.setHit_points(robotDto.getHit_points() != null ? robotDto.getHit_points() : origin.getHit_points());
+        Body body = bodyService.findById(robot.getBody_series());
+        if (body == null){
+            return ResponseEntity.badRequest().body("Robot " + robot.getId() + " has invalid body " + robot.getBody_series());
+        }
+        Double hp = robotDto.getHit_points() != null ? robotDto.getHit_points() : origin.getHit_points();
+        boolean tooMuchHp = false;
+        if (hp > body.getMax_hit_points()){
+            hp = body.getMax_hit_points();
+            tooMuchHp = true;
+        }
+        robot.setHit_points(hp);
         robot.setId(id);
         robotService.update(robot);
+        if (tooMuchHp){
+            return ResponseEntity.ok("Updated. Hit points set to " + hp);
+        }
         return ResponseEntity.ok("Updated");
     }
 

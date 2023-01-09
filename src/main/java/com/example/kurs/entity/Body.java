@@ -11,7 +11,7 @@ public class Body {
     @GeneratedValue
     private Long id;
     private String name;
-    private Integer max_hit_points;
+    private Double max_hit_points;
     private Integer cost;
 
     public Body() {
@@ -33,11 +33,11 @@ public class Body {
         this.name = name;
     }
 
-    public Integer getMax_hit_points() {
+    public Double getMax_hit_points() {
         return max_hit_points;
     }
 
-    public void setMax_hit_points(Integer max_hit_points) {
+    public void setMax_hit_points(Double max_hit_points) {
         this.max_hit_points = max_hit_points;
     }
 

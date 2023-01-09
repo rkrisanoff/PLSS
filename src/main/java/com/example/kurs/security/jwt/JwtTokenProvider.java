@@ -42,12 +42,12 @@ public class JwtTokenProvider {
     protected void init(){
         secret = Base64.getEncoder().encodeToString(secret.getBytes());
     }
-    public String createToken(String username, List<Role> roles){
+    public String createToken(Long id, String username, List<Role> roles){
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", getRoleNames(roles));
+        claims.put("uid", id);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)

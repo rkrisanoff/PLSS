@@ -2,10 +2,12 @@ package com.example.kurs.controller;
 
 import com.example.kurs.dto.ExploreRequestDto;
 import com.example.kurs.entity.Asteroid;
+import com.example.kurs.entity.Deposit;
 import com.example.kurs.entity.Employee;
 import com.example.kurs.repo.AsteroidRepo;
 import com.example.kurs.repo.RobotRepo;
 import com.example.kurs.service.AsteroidService;
+import com.example.kurs.service.DepositService;
 import com.example.kurs.utils.JsonProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class AsteroidController {
     private RobotRepo robotRepo;
     @Autowired
     private JsonProvider jsonProvider;
+    @Autowired
+    private DepositService depositService;
 
     @PostMapping("/explore")
     public ResponseEntity explore(@RequestBody ExploreRequestDto exploreRequestDto) throws JsonProcessingException {
@@ -37,5 +41,17 @@ public class AsteroidController {
         }
         List<Asteroid> asteroids = asteroidService.explore(robot_id);
         return ResponseEntity.ok(jsonProvider.convertToJson(asteroids));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity listall() throws JsonProcessingException {
+        List<Asteroid> asteroids = asteroidService.getAll();
+        return ResponseEntity.ok(jsonProvider.convertToJson(asteroids));
+    }
+
+    @GetMapping("/{id}/deposits")
+    public ResponseEntity listDeposits(@PathVariable Long asteroid_id) throws JsonProcessingException {
+        List<Deposit> deposits = depositService.getDepositsOfAsteroid(asteroid_id);
+        return ResponseEntity.ok(jsonProvider.convertToJson(deposits));
     }
 }

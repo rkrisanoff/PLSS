@@ -10,7 +10,7 @@ public class Deposit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long asteroid_id;
+    private Long asteroidId;
     private Double bor_quantity;
 
     public Deposit() {
@@ -25,11 +25,11 @@ public class Deposit {
     }
 
     public Long getAsteroid_id() {
-        return asteroid_id;
+        return asteroidId;
     }
 
     public void setAsteroid_id(Long asteroid_id) {
-        this.asteroid_id = asteroid_id;
+        this.asteroidId = asteroid_id;
     }
 
     public Double getBor_quantity() {

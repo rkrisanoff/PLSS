@@ -20,5 +20,9 @@ public class BodyService {
         Body body = bodyRepo.findByReleaseSeries(release_series);
         return body;
     }
-
+    public List<Body> findAll(){
+        List<Body> bodies = bodyRepo.findAll();
+        log.info("Listed all bodies.");
+        return bodies;
+    }
 }

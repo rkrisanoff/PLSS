@@ -49,7 +49,7 @@ public class AsteroidController {
         return ResponseEntity.ok(jsonProvider.convertToJson(asteroids));
     }
 
-    @GetMapping("/{id}/deposits")
+    @GetMapping("/{asteroid_id}/deposits")
     public ResponseEntity listDeposits(@PathVariable Long asteroid_id) throws JsonProcessingException {
         List<Deposit> deposits = depositService.getDepositsOfAsteroid(asteroid_id);
         return ResponseEntity.ok(jsonProvider.convertToJson(deposits));

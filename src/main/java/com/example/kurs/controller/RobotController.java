@@ -125,4 +125,14 @@ public class RobotController {
         }
         return ResponseEntity.badRequest().body(msg);
     }
+
+    @GetMapping("/{id}/repair")
+    public ResponseEntity repair(@PathVariable Long id){
+        Robot robot = robotService.repair(id);
+        if (robot != null){
+            return ResponseEntity.ok("Repaired.");
+        } else {
+            return ResponseEntity.badRequest().body("Robot " + id + " not found.");
+        }
+    }
 }

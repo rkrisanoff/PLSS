@@ -14,6 +14,8 @@ import java.util.List;
 @Slf4j
 public class RobotService {
     @Autowired
+    private BodyRepo bodyRepo;
+    @Autowired
     private RobotRepo robotRepo;
     @Autowired
     private DepositRepo depositRepo;
@@ -117,4 +119,17 @@ public class RobotService {
         return ExtractionStatus.OK;
     }
 
+    public Robot repair(Long id) {
+        if (id == null){
+            return null;
+        }
+        Robot robot = robotRepo.findById(id).orElse(null);
+        if (robot == null){
+            return null;
+        }
+        Body body = bodyRepo.findByReleaseSeries(robot.getBody_series());
+        Double max_hp = body.getMax_hit_points();
+        robot.setHit_points(max_hp);
+        return robot;
+    }
 }

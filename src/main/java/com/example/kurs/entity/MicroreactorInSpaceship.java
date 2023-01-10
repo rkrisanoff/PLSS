@@ -10,28 +10,28 @@ import java.util.Date;
 @IdClass(MicroreactorInSpaceship.class)
 public class MicroreactorInSpaceship implements Serializable {
     @Id
-    private Long microreactor_type_id;
+    private Long microreactorTypeId;
     @Id
-    private Long spaceship_id;
+    private Long spaceshipId;
     private Date deploy_date;
 
     public MicroreactorInSpaceship() {
     }
 
-    public Long getMicroreactor_type_id() {
-        return microreactor_type_id;
+    public Long getMicroreactorTypeId() {
+        return microreactorTypeId;
     }
 
-    public void setMicroreactor_type_id(Long microreactor_type_id) {
-        this.microreactor_type_id = microreactor_type_id;
+    public void setMicroreactorTypeId(Long microreactorTypeId) {
+        this.microreactorTypeId = microreactorTypeId;
     }
 
-    public Long getSpaceship_id() {
-        return spaceship_id;
+    public Long getSpaceshipId() {
+        return spaceshipId;
     }
 
-    public void setSpaceship_id(Long spaceship_id) {
-        this.spaceship_id = spaceship_id;
+    public void setSpaceshipId(Long spaceshipId) {
+        this.spaceshipId = spaceshipId;
     }
 
     public Date getDeploy_date() {

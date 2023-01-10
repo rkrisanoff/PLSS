@@ -42,24 +42,34 @@ public class SpaceshipService {
         spaceshipRepo.deleteById(id);
     }
 
-    public Spaceship update(SpaceshipUpdateRequestDto requestDto){
+    public Spaceship update(Long id, SpaceshipUpdateRequestDto requestDto){
+        if (id == null){
+            log.info("Spaceship id is null.");
+            return null;
+        }
+        Spaceship origin = spaceshipRepo.findById(id).orElse(null);
+        if (origin == null){
+            log.info("Spaceship {} does not exist.", id);
+            return null;
+        }
         Spaceship spaceship = new Spaceship();
-        spaceship.setB2_h6_quantity(requestDto.getB2_h6_quantity());
-        spaceship.setB5_h12_quantity(requestDto.getB5_h12_quantity());
-        spaceship.setB12_h12_quantity(requestDto.getB12_h12_quantity());
-        spaceship.setB10_h14_quantity(requestDto.getB10_h14_quantity());
+        spaceship.setB2_h6_quantity(requestDto.getB2_h6_quantity() != null ? requestDto.getB2_h6_quantity() : origin.getB2_h6_quantity());
+        spaceship.setB5_h12_quantity(requestDto.getB5_h12_quantity() != null ? requestDto.getB5_h12_quantity() : origin.getB5_h12_quantity());
+        spaceship.setB12_h12_quantity(requestDto.getB12_h12_quantity() != null ? requestDto.getB12_h12_quantity() : origin.getB12_h12_quantity());
+        spaceship.setB10_h14_quantity(requestDto.getB10_h14_quantity() != null ? requestDto.getB10_h14_quantity() : origin.getB10_h14_quantity());
         Long department_id = requestDto.getDepartment_id();
-        if (department_id == null){
-            log.info("Department id not specified.");
-            return null;
+        if (department_id != null){
+            Department department = departmentService.findById(department_id);
+            if (department == null){
+                log.info("Invalid department. Setting old department id");
+                spaceship.setDepartment_id(origin.getDepartment_id());
+            } else {
+                spaceship.setDepartment_id(requestDto.getDepartment_id());
+            }
+        } else {
+            spaceship.setDepartment_id(origin.getDepartment_id());
         }
-        Department department = departmentService.findById(department_id);
-        if (department == null){
-            log.info("Invalid department.");
-            return null;
-        }
-        spaceship.setDepartment_id(department_id);
-        spaceship.setIncome(requestDto.getIncome());
+        spaceship.setIncome(requestDto.getIncome() != null ? requestDto.getIncome() : origin.getIncome());
         return spaceshipRepo.save(spaceship);
     }
 

@@ -2,6 +2,7 @@ package com.example.kurs.controller;
 
 import com.example.kurs.dto.SpaceshipRequestDto;
 import com.example.kurs.dto.SpaceshipUpdateRequestDto;
+import com.example.kurs.entity.MicroreactorType;
 import com.example.kurs.entity.Spaceship;
 import com.example.kurs.service.SpaceshipService;
 import com.example.kurs.utils.JsonProvider;
@@ -26,9 +27,9 @@ public class SpaceshipController {
         return ResponseEntity.badRequest().body("Department id not specified.");
     }
 
-    @PostMapping("/update")
-    public ResponseEntity update(@RequestBody SpaceshipUpdateRequestDto spaceshipUpdateRequestDto){
-        Spaceship spaceship = spaceshipService.update(spaceshipUpdateRequestDto);
+    @PostMapping("/{id}/update")
+    public ResponseEntity update(@PathVariable Long id, @RequestBody SpaceshipUpdateRequestDto spaceshipUpdateRequestDto){
+        Spaceship spaceship = spaceshipService.update(id, spaceshipUpdateRequestDto);
         if (spaceship != null){
             return ResponseEntity.ok("Updated.");
         }
@@ -46,5 +47,13 @@ public class SpaceshipController {
         List<Spaceship> spaceshipList = spaceshipService.listall();
         return ResponseEntity.ok(jsonProvider.convertToJson(spaceshipList));
     }
+
+   /* @GetMapping("/{id}/microreactors")
+    public ResponseEntity getReactors(@PathVariable Long id){
+        if (id == null){
+            return ResponseEntity.badRequest().body("Microreactor id not specified.");
+        }
+        MicroreactorType reactor =
+    }*/
 
 }

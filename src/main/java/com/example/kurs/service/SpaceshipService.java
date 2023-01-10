@@ -70,6 +70,7 @@ public class SpaceshipService {
             spaceship.setDepartment_id(origin.getDepartment_id());
         }
         spaceship.setIncome(requestDto.getIncome() != null ? requestDto.getIncome() : origin.getIncome());
+        spaceship.setId(id);
         return spaceshipRepo.save(spaceship);
     }
 

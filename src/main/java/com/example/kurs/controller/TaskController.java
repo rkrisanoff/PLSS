@@ -2,9 +2,11 @@ package com.example.kurs.controller;
 
 import com.example.kurs.dto.TaskRequestDto;
 import com.example.kurs.entity.Employee;
+import com.example.kurs.entity.Post;
 import com.example.kurs.entity.Task;
 import com.example.kurs.security.jwt.JwtTokenProvider;
 import com.example.kurs.service.EmployeeService;
+import com.example.kurs.service.PostService;
 import com.example.kurs.service.TaskService;
 import com.example.kurs.utils.JsonProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,6 +28,9 @@ public class TaskController {
     private EmployeeService employeeService;
 
     @Autowired
+    private PostService postService;
+
+    @Autowired
     private JsonProvider jsonProvider;
 
     @PostMapping("/create")
@@ -38,8 +43,8 @@ public class TaskController {
         task.setDescription(taskRequestDto.getDescription());
         String token = authHeader.substring(7, authHeader.length());
         Employee creator = employeeService.findByUsername(jwtTokenProvider.getUsername(token));
-        task.setCreator_post_id(creator.getId());
-        task.setExecutor_post_id(taskRequestDto.getExecutor_post_id());
+        task.setCreator_id(creator.getId());
+        task.setExecutor_id(taskRequestDto.getExecutor_id());
         task.setState(taskRequestDto.getState() != null ? taskRequestDto.getState() : "unknown");
         Task created = taskService.create(task);
         if (created != null){

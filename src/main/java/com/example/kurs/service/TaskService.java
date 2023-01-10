@@ -31,7 +31,7 @@ public class TaskService {
             log.info("Task {} does not have cost");
             return null;
         }
-        if (task.getCreator_post_id() == null){
+        if (task.getCreator_id() == null){
             log.info("Task {} does not have creator");
             return null;
         }
@@ -53,8 +53,8 @@ public class TaskService {
         newTask.setState(task.getState() != null ? task.getState() : origin.getState());
         newTask.setCost(task.getCost() != null ? task.getCost() : origin.getCost());
         newTask.setDescription(task.getDescription() != null ? task.getDescription() : origin.getDescription());
-        newTask.setExecutor_post_id(task.getExecutor_post_id() != null ? task.getExecutor_post_id() : origin.getExecutor_post_id());
-        newTask.setCreator_post_id(task.getCreator_post_id() != null ? task.getCreator_post_id() : origin.getCreator_post_id());
+        newTask.setCreator_id(task.getCreator_id() != null ? task.getCreator_id() : origin.getCreator_id());
+        newTask.setExecutor_id(task.getExecutor_id() != null ? task.getExecutor_id() : origin.getExecutor_id());
         newTask.setId(id);
         return taskRepo.save(newTask);
     }

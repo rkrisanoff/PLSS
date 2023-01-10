@@ -12,8 +12,8 @@ public class Task {
     private Long id;
     private String description;
     private String state;
-    private Long creator_post_id;
-    private Long executor_post_id;
+    private Long creator_id;
+    private Long executor_id;
     private Double cost;
 
     public Task() {
@@ -43,20 +43,20 @@ public class Task {
         this.state = state;
     }
 
-    public Long getCreator_post_id() {
-        return creator_post_id;
+    public Long getCreator_id() {
+        return creator_id;
     }
 
-    public void setCreator_post_id(Long creator_post_id) {
-        this.creator_post_id = creator_post_id;
+    public void setCreator_id(Long creator_id) {
+        this.creator_id = creator_id;
     }
 
-    public Long getExecutor_post_id() {
-        return executor_post_id;
+    public Long getExecutor_id() {
+        return executor_id;
     }
 
-    public void setExecutor_post_id(Long executor_post_id) {
-        this.executor_post_id = executor_post_id;
+    public void setExecutor_id(Long executor_id) {
+        this.executor_id = executor_id;
     }
 
     public Double getCost() {

@@ -32,6 +32,7 @@ public class PostService {
         }
         return post;
     }
+
     public List<Post> getAll(){
         List<Post> posts = postRepo.findAll();
         log.info("Listed posts");

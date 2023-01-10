@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,8 +29,15 @@ public class ReactorService {
         return reactor;
     }
 
-    /*public List<MicroreactorType> findBySpaceshipId(Long id){
-        List<MicroreactorType> reactors = reactorInShipRepo.findBySpaceshipId(id).stream()
+    public List<MicroreactorType> findBySpaceshipId(Long id){
+        if (id == null){
+            log.info("Spaceship id is null.");
+            return null;
+        }
+        log.info("Listed reactors in {} spaceship.", id);
+        return reactorInShipRepo.findBySpaceshipId(id).stream()
                 .map(reactorInShip -> reactorRepo.findById(reactorInShip.getMicroreactorTypeId()).get())
-    }*/
+                .distinct()
+                .collect(Collectors.toList());
+    }
 }

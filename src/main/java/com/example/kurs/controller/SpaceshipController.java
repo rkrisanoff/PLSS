@@ -4,6 +4,7 @@ import com.example.kurs.dto.SpaceshipRequestDto;
 import com.example.kurs.dto.SpaceshipUpdateRequestDto;
 import com.example.kurs.entity.MicroreactorType;
 import com.example.kurs.entity.Spaceship;
+import com.example.kurs.service.ReactorService;
 import com.example.kurs.service.SpaceshipService;
 import com.example.kurs.utils.JsonProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,6 +19,9 @@ public class SpaceshipController {
     private SpaceshipService spaceshipService;
     @Autowired
     private JsonProvider jsonProvider;
+
+    @Autowired
+    private ReactorService reactorService;
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody SpaceshipRequestDto spaceshipRequestDto){
         Spaceship spaceship = spaceshipService.create(spaceshipRequestDto);
@@ -48,12 +52,13 @@ public class SpaceshipController {
         return ResponseEntity.ok(jsonProvider.convertToJson(spaceshipList));
     }
 
-   /* @GetMapping("/{id}/microreactors")
-    public ResponseEntity getReactors(@PathVariable Long id){
+    @GetMapping("/{id}/microreactors")
+    public ResponseEntity getReactors(@PathVariable Long id) throws JsonProcessingException {
         if (id == null){
             return ResponseEntity.badRequest().body("Microreactor id not specified.");
         }
-        MicroreactorType reactor =
-    }*/
+        List<MicroreactorType> reactors = reactorService.findBySpaceshipId(id);
+        return ResponseEntity.ok(jsonProvider.convertToJson(reactors));
+    }
 
 }

@@ -40,4 +40,10 @@ public class ReactorService {
                 .distinct()
                 .collect(Collectors.toList());
     }
+
+    public List<MicroreactorType> findAll() {
+        List<MicroreactorType> reactors = reactorRepo.findAll();
+        log.info("Listed all reactors.");
+        return reactors;
+    }
 }

@@ -9,7 +9,7 @@ import javax.persistence.Id;
 public class PositronicBrain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long release_series;
+    private Long releaseSeries;
     private String name;
     private Integer speed;
     private Integer cost;
@@ -17,12 +17,12 @@ public class PositronicBrain {
     public PositronicBrain() {
     }
 
-    public Long getRelease_series() {
-        return release_series;
+    public Long getReleaseSeries() {
+        return releaseSeries;
     }
 
-    public void setRelease_series(Long release_series) {
-        this.release_series = release_series;
+    public void setReleaseSeries(Long releaseSeries) {
+        this.releaseSeries = releaseSeries;
     }
 
     public String getName() {

@@ -9,7 +9,7 @@ import javax.persistence.Id;
 public class EyesSensors {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long release_series;
+    private Long releaseSeries;
     private String name;
     private Integer distance;
     private Integer cost;
@@ -17,12 +17,12 @@ public class EyesSensors {
     public EyesSensors() {
     }
 
-    public Long getRelease_series() {
-        return release_series;
+    public Long getReleaseSeries() {
+        return releaseSeries;
     }
 
-    public void setRelease_series(Long release_series) {
-        this.release_series = release_series;
+    public void setReleaseSeries(Long releaseSeries) {
+        this.releaseSeries = releaseSeries;
     }
 
     public String getName() {

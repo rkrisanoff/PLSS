@@ -19,4 +19,14 @@ public class BrainService {
         log.info("Listed brains.");
         return positronicBrains;
     }
+
+    public PositronicBrain findByReleaseSeries(Long releaseSeries){
+        PositronicBrain brain = brainRepo.findByReleaseSeries(releaseSeries);
+        if (brain != null){
+            log.info("Brain {} found.", releaseSeries);
+        } else {
+            log.info("Brain {} not found.", releaseSeries);
+        }
+        return brain;
+    }
 }

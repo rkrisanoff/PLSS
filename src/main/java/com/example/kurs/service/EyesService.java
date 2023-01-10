@@ -19,4 +19,14 @@ public class EyesService {
         log.info("Listed eyes sensors.");
         return eyesSensors;
     }
+
+    public EyesSensors findByReleaseSeries(Long releaseSeries){
+        EyesSensors eyes = eyesRepo.findByReleaseSeries(releaseSeries);
+        if (eyes != null){
+            log.info("Eyes sensors {} found.", releaseSeries);
+        } else {
+            log.info("Eyes sensors {} not found.", releaseSeries);
+        }
+        return eyes;
+    }
 }

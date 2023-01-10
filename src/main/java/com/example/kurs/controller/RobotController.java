@@ -23,6 +23,10 @@ public class RobotController {
     @Autowired
     private BodyService bodyService;
     @Autowired
+    private BrainService brainService;
+    @Autowired
+    private  EyesService eyesService;
+    @Autowired
     private PostService postService;
     @Autowired
     private RoleService roleService;
@@ -41,7 +45,6 @@ public class RobotController {
         Robot robot = new Robot();
 
         if (robotDto.getAsteroid_id() != null){
-            robot.setAsteroid_id(robotDto.getAsteroid_id());
             Asteroid asteroid = asteroidService.findById(robotDto.getAsteroid_id());
             if (asteroid == null){
                 return ResponseEntity.badRequest().body("Invalid asteroid id " + robot.getAsteroid_id());
@@ -51,17 +54,43 @@ public class RobotController {
 
         if (robotDto.getBody_series() == null){
             return ResponseEntity.badRequest().body("No body specified.");
+        } else {
+            Body body = bodyService.findByReleaseSeries(robotDto.getBody_series());
+            if (body == null) {
+                return ResponseEntity.badRequest().body("Invalid body id " + robotDto.getBody_series());
+            }
+            robot.setBody_series(robotDto.getBody_series());
+
         }
-        robot.setBody_series(robotDto.getBody_series());
         if (robotDto.getBrain_series() == null){
             return ResponseEntity.badRequest().body("No brain specified.");
+        }else {
+            PositronicBrain brain = brainService.findByReleaseSeries(robotDto.getBody_series());
+            if (brain == null) {
+                return ResponseEntity.badRequest().body("Invalid brain id " + robotDto.getBrain_series());
+            }
+            robot.setBrain_series(robotDto.getBrain_series());
         }
-        robot.setBrain_series(robotDto.getBrain_series());
         if (robotDto.getEye_series() == null){
             return ResponseEntity.badRequest().body("No eyes specified.");
+        } else {
+            EyesSensors eyes = eyesService.findByReleaseSeries(robotDto.getEye_series());
+            if (eyes == null){
+                return ResponseEntity.badRequest().body("Invalid eyes id " + robotDto.getEye_series());
+            }
+            robot.setEye_series(robotDto.getEye_series());
         }
-        robot.setEye_series(robotDto.getEye_series());
-        robot.setOperator_post_id(robotDto.getOperator_post_id());
+        if (robotDto.getOperator_post_id() != null){
+            Post post = postService.findById(robotDto.getOperator_post_id());
+            if (robotDto.getOperator_post_id() == null){
+                return ResponseEntity.badRequest().body("Invalid asteroid id " + robot.getAsteroid_id());
+            }
+            Role role = roleService.findById(post.getRoleId());
+            if (!role.getCan_operate_robot()){
+                return ResponseEntity.badRequest().body("This operator post " + robot.getOperator_post_id() + " cannot operate robots.");
+            }
+            robot.setOperator_post_id(robotDto.getOperator_post_id());
+        }
         robot.setHit_points(bodyService.findByReleaseSeries(robotDto.getBody_series()).getMax_hit_points());
         robotService.create(robot);
         return ResponseEntity.ok("Created");

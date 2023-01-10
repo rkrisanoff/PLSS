@@ -4,4 +4,5 @@ import com.example.kurs.entity.PositronicBrain;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PositronicBrainRepo extends JpaRepository<PositronicBrain, Long> {
+    PositronicBrain findByReleaseSeries(Long releaseSeries);
 }

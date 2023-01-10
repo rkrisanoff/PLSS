@@ -2,14 +2,8 @@ package com.example.kurs.controller;
 
 import com.example.kurs.dto.ExtractRequestDto;
 import com.example.kurs.dto.RobotDto;
-import com.example.kurs.entity.Body;
-import com.example.kurs.entity.Post;
-import com.example.kurs.entity.Robot;
-import com.example.kurs.entity.Role;
-import com.example.kurs.service.BodyService;
-import com.example.kurs.service.PostService;
-import com.example.kurs.service.RobotService;
-import com.example.kurs.service.RoleService;
+import com.example.kurs.entity.*;
+import com.example.kurs.service.*;
 import com.example.kurs.service.extraction.ExtractionStatus;
 import com.example.kurs.utils.JsonProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,6 +26,8 @@ public class RobotController {
     private PostService postService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private AsteroidService asteroidService;
 
     @GetMapping("/all")
     public ResponseEntity getAll() throws JsonProcessingException {
@@ -43,7 +39,16 @@ public class RobotController {
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody RobotDto robotDto){
         Robot robot = new Robot();
-        robot.setAsteroid_id(robotDto.getAsteroid_id());
+
+        if (robotDto.getAsteroid_id() != null){
+            robot.setAsteroid_id(robotDto.getAsteroid_id());
+            Asteroid asteroid = asteroidService.findById(robotDto.getAsteroid_id());
+            if (asteroid == null){
+                return ResponseEntity.badRequest().body("Invalid asteroid id " + robot.getAsteroid_id());
+            }
+            robot.setAsteroid_id(robotDto.getAsteroid_id());
+        }
+
         if (robotDto.getBody_series() == null){
             return ResponseEntity.badRequest().body("No body specified.");
         }

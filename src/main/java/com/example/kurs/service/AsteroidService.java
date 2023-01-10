@@ -38,6 +38,16 @@ public class AsteroidService {
         return asteroids;
     }
 
+    public Asteroid findById(Long id){
+        Asteroid asteroid = asteroidRepo.findById(id).orElse(null);
+        if (asteroid != null){
+            log.info("Asteroid {} found", id);
+        } else {
+            log.info("Asteroid {} not found.", id);
+        }
+        return asteroid;
+    }
+
     public List<Asteroid> explore(Long robot_id){
         if (robot_id == null || robotRepo.findById(robot_id).orElse(null) == null){
             log.info("No robot {} found.", robot_id);

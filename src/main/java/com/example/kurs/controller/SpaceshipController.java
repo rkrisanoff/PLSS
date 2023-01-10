@@ -1,6 +1,7 @@
 package com.example.kurs.controller;
 
 import com.example.kurs.dto.SpaceshipRequestDto;
+import com.example.kurs.dto.SpaceshipUpdateRequestDto;
 import com.example.kurs.entity.Spaceship;
 import com.example.kurs.service.SpaceshipService;
 import com.example.kurs.utils.JsonProvider;
@@ -23,6 +24,15 @@ public class SpaceshipController {
             return ResponseEntity.ok("Created.");
         }
         return ResponseEntity.badRequest().body("Department id not specified.");
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity update(@RequestBody SpaceshipUpdateRequestDto spaceshipUpdateRequestDto){
+        Spaceship spaceship = spaceshipService.update(spaceshipUpdateRequestDto);
+        if (spaceship != null){
+            return ResponseEntity.ok("Updated.");
+        }
+        return ResponseEntity.badRequest().body("Invalid department.");
     }
 
     @GetMapping("/{id}/delete")

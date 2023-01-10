@@ -130,6 +130,6 @@ public class RobotService {
         Body body = bodyRepo.findByReleaseSeries(robot.getBody_series());
         Double max_hp = body.getMax_hit_points();
         robot.setHit_points(max_hp);
-        return robot;
+        return robotRepo.save(robot);
     }
 }

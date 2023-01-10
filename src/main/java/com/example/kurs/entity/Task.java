@@ -14,7 +14,7 @@ public class Task {
     private String state;
     private Long creator_post_id;
     private Long executor_post_id;
-    private Integer cost;
+    private Double cost;
 
     public Task() {
     }
@@ -59,11 +59,11 @@ public class Task {
         this.executor_post_id = executor_post_id;
     }
 
-    public Integer getCost() {
+    public Double getCost() {
         return cost;
     }
 
-    public void setCost(Integer cost) {
+    public void setCost(Double cost) {
         this.cost = cost;
     }
 }

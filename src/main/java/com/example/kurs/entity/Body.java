@@ -10,7 +10,7 @@ public class Body {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long release_series;
     private String name;
     private Double max_hit_points;
     private Integer cost;
@@ -18,12 +18,12 @@ public class Body {
     public Body() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getRelease_series() {
+        return release_series;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setRelease_series(Long release_series) {
+        this.release_series = release_series;
     }
 
     public String getName() {

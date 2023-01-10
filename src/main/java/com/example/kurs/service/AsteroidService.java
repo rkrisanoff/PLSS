@@ -53,7 +53,7 @@ public class AsteroidService {
         EyesSensors eyes = eyesRepo.findById(eyes_id).get();
         int distance = eyes.getDistance();
         int min_asteroids = 1;
-        int max_asteroids = (int) Math.floor(5 + distance*0.1);
+        int max_asteroids = (int) Math.floor(5 + distance*0.0001);
         int min_deposits = 1;
         int max_deposits = 10;
         int asteroids_num = ThreadLocalRandom.current().nextInt(min_asteroids, max_asteroids);

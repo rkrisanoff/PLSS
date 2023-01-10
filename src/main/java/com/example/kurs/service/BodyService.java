@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 public class BodyService {
     @Autowired
     private BodyRepo bodyRepo;
-    public Body findById(Long id){
-        if (id == null){
+    public Body findByReleaseSeries(Long release_series){
+        if (release_series == null){
             return null;
         }
-        Body body = bodyRepo.findById(id).orElse(null);
+        Body body = bodyRepo.findByReleaseSeries(release_series);
         return body;
     }
 }

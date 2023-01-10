@@ -49,7 +49,7 @@ public class RobotController {
         }
         robot.setEye_series(robotDto.getEye_series());
         robot.setOperator_post_id(robotDto.getOperator_post_id());
-        robot.setHit_points(bodyService.findById(robotDto.getBody_series()).getMax_hit_points());
+        robot.setHit_points(bodyService.findByReleaseSeries(robotDto.getBody_series()).getMax_hit_points());
         robotService.create(robot);
         return ResponseEntity.ok("Created");
     }
@@ -72,7 +72,7 @@ public class RobotController {
         robot.setBrain_series(robotDto.getBrain_series() != null ? robotDto.getBrain_series() : origin.getBrain_series());
         robot.setEye_series(robotDto.getEye_series() != null ? robotDto.getEye_series() : origin.getEye_series());
         robot.setOperator_post_id(robotDto.getOperator_post_id() != null ? robotDto.getOperator_post_id() : origin.getOperator_post_id());
-        Body body = bodyService.findById(robot.getBody_series());
+        Body body = bodyService.findByReleaseSeries(robot.getBody_series());
         if (body == null){
             return ResponseEntity.badRequest().body("Robot " + robot.getId() + " has invalid body " + robot.getBody_series());
         }

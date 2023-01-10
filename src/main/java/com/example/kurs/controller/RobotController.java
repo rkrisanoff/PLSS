@@ -3,9 +3,13 @@ package com.example.kurs.controller;
 import com.example.kurs.dto.ExtractRequestDto;
 import com.example.kurs.dto.RobotDto;
 import com.example.kurs.entity.Body;
+import com.example.kurs.entity.Post;
 import com.example.kurs.entity.Robot;
+import com.example.kurs.entity.Role;
 import com.example.kurs.service.BodyService;
+import com.example.kurs.service.PostService;
 import com.example.kurs.service.RobotService;
+import com.example.kurs.service.RoleService;
 import com.example.kurs.service.extraction.ExtractionStatus;
 import com.example.kurs.utils.JsonProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,6 +28,10 @@ public class RobotController {
     private JsonProvider jsonProvider;
     @Autowired
     private BodyService bodyService;
+    @Autowired
+    private PostService postService;
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping("/all")
     public ResponseEntity getAll() throws JsonProcessingException {
@@ -91,12 +99,16 @@ public class RobotController {
         return ResponseEntity.ok("Updated");
     }
 
-    @PostMapping("/{id}/extract")
-    public ResponseEntity extract(@PathVariable Long id, @RequestBody ExtractRequestDto requestDto){
-        Long department_id = requestDto.getDepartment_id();
+    @PostMapping("/{robot_id}/extract")
+    public ResponseEntity extract(@PathVariable Long robot_id, @RequestBody ExtractRequestDto requestDto){
         Long deposit_id = requestDto.getDeposit_id();
-        Robot robot = robotService.findById(id);
-        ExtractionStatus status = robotService.extract(robot,deposit_id, department_id);
+        Robot robot = robotService.findById(robot_id);
+        Post operator_post = postService.findById(robot.getOperator_post_id());
+        Role operator_role = roleService.findById(operator_post.getRoleId());
+        if (!operator_role.getCan_operate_robot()){
+            return ResponseEntity.badRequest().body("Robot is attached to employee, that cannot operate robots.");
+        }
+        ExtractionStatus status = robotService.extract(robot, deposit_id, operator_post.getDepartmentId());
         String msg = "OK";
         switch (status){
             case OK:

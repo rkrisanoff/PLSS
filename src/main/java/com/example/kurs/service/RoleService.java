@@ -15,4 +15,13 @@ public class RoleService {
     public Role findByName(String name){
         return roleRepo.findByName(name);
     }
+    public Role findById(Long id){
+        Role role = roleRepo.findById(id).orElse(null);
+        if (role != null){
+            log.info("Role {} found.", id);
+        } else {
+            log.info("Role {} not found.", id);
+        }
+        return role;
+    }
 }

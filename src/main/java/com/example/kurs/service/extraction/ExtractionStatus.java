@@ -6,7 +6,7 @@ public enum ExtractionStatus {
     NO_DEPOSIT,
     NO_BRAIN,
     NO_BORON,
+    NO_PERMISSION,
     ROBOT_DEAD,
-
     OK
 }

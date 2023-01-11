@@ -43,6 +43,7 @@ public class EmployeeController {
         employee.setRoles(List.of(roleService.findByName("operator")));
         employee.setFirst_name(updateDto.getFirst_name() != null ? updateDto.getFirst_name() : origin.getFirst_name());
         employee.setLast_name(updateDto.getLast_name() != null ? updateDto.getLast_name() : origin.getLast_name());
+        employee.setGender(updateDto.getGender() != null ? updateDto.getGender() : origin.getGender());
         employee.setPatronymic(updateDto.getPatronymic() != null ? updateDto.getPatronymic() : origin.getPatronymic());
         employee.setId(id);
         Employee updated = employeeService.update(employee);

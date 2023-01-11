@@ -95,6 +95,7 @@ public class AuthController {
             registerEmployee.setFirst_name(requestDto.getFirst_name());
             registerEmployee.setLast_name(requestDto.getLast_name());
             registerEmployee.setPatronymic(requestDto.getPatronymic());
+            registerEmployee.setGender(requestDto.getGender());
             Employee registered = employeeService.register(registerEmployee);
 
             Post registerPost = new Post();

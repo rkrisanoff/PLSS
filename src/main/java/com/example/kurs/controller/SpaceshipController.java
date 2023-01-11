@@ -102,7 +102,7 @@ public class SpaceshipController {
         if (savedShip == null || savedDep == null){
             return ResponseEntity.badRequest().body("Error while updating spaceship or department balance.");
         }
-        return ResponseEntity.badRequest().body("Work is done.");
+        return ResponseEntity.ok("Work is done.");
     }
 
 

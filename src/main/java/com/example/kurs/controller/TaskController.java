@@ -53,6 +53,13 @@ public class TaskController {
             return ResponseEntity.badRequest().body("Employee " + creator.getId() + " has no manager authority to create tasks.");
         }
         task.setCreatorPostId(managerPost.getId());
+        if (taskRequestDto.getExecutorPostId() != null){
+            Post executorPost = postService.findById(taskRequestDto.getExecutorPostId());
+            if (executorPost == null){
+                return ResponseEntity.badRequest().body("Post " + taskRequestDto.getExecutorPostId() + " not found.");
+            }
+            task.setExecutorPostId(taskRequestDto.getExecutorPostId());
+        }
         task.setExecutorPostId(taskRequestDto.getExecutorPostId());
         task.setState(taskRequestDto.getState() != null ? taskRequestDto.getState() : "unknown");
         Task created = taskService.create(task);
@@ -80,6 +87,12 @@ public class TaskController {
             Role newCreatorRole = roleService.findById(newCreatorPost.getRoleId());
             if (newCreatorRole.getName() != "manager"){
                 return ResponseEntity.badRequest().body("New creator post " + taskRequestDto.getCreatorPostId() + " does not have manager authority.");
+            }
+        }
+        if (taskRequestDto.getExecutorPostId() != null){
+            Post executorPost = postService.findById(taskRequestDto.getExecutorPostId());
+            if (executorPost == null){
+                return ResponseEntity.badRequest().body("Invalid executor post " + taskRequestDto.getExecutorPostId());
             }
         }
         Task updated = taskService.update(id, taskRequestDto);

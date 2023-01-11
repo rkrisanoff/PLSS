@@ -1,9 +1,12 @@
 package com.example.kurs.controller;
 
 import com.example.kurs.dto.PostDto;
+import com.example.kurs.entity.Department;
 import com.example.kurs.entity.Employee;
 import com.example.kurs.entity.Post;
 import com.example.kurs.entity.Role;
+import com.example.kurs.repo.PostRepo;
+import com.example.kurs.service.DepartmentService;
 import com.example.kurs.service.EmployeeService;
 import com.example.kurs.service.PostService;
 import com.example.kurs.service.RoleService;
@@ -27,6 +30,10 @@ public class PostController {
     PostService postService;
     @Autowired
     JsonProvider jsonProvider;
+    @Autowired
+    DepartmentService departmentService;
+    @Autowired
+    private PostRepo postRepo;
 
     @GetMapping("/all")
     public ResponseEntity getAll() throws JsonProcessingException {
@@ -48,23 +55,44 @@ public class PostController {
         if (origin == null){
             return ResponseEntity.badRequest().body("Could not update post " + id + ", because it does not exist");
         }
-        Role role = roleService.findByName(postDto.getRolename());
-        Employee employee = employeeService.findByUsername(postDto.getEmployee_username());
+        if (postDto.getEmployee_username() != null){
+            Employee employee = employeeService.findByUsername(postDto.getEmployee_username());
+            if (employee != null){
+                post.setEmployeeId(employee.getId());
+            } else {
+                return ResponseEntity.badRequest().body("Employee " + postDto.getEmployee_username() + " not found.");
+            }
+        } else {
+            post.setEmployeeId(origin.getEmployeeId());
+        }
         if (postDto.getRolename() != null){
+            Role tempRole = roleService.findByName(postDto.getRolename());
             Post managerPost = postService.findManagerPostByEmployeeId(id);
             Post operatorPost = postService.findOperatorPostByEmployeeId(id);
+            if (tempRole == null){
+                return ResponseEntity.badRequest().body("Invalid role name " + postDto.getRolename());
+            }
             if (managerPost != null && postDto.getRolename() == "manager"){
-                return ResponseEntity.badRequest().body("Employee " + employee.getId() + " already has manager post.");
+                return ResponseEntity.badRequest().body("Employee " + post.getEmployeeId() + " already has manager post.");
             }
             if (operatorPost != null && postDto.getRolename() == "operator"){
-                return ResponseEntity.badRequest().body("Employee " + employee.getId() + " already has operator post.");
+                return ResponseEntity.badRequest().body("Employee " + post.getEmployeeId() + " already has operator post.");
             }
-            post.setRoleId(role.getId());
+            post.setRoleId(tempRole.getId());
         } else {
             post.setRoleId(origin.getRoleId());
         }
-        post.setEmployeeId(employee != null ? employee.getId() : origin.getEmployeeId());
-        post.setDepartmentId(postDto.getDepartment_id() != null ? postDto.getDepartment_id() : origin.getDepartmentId());
+
+        if (postDto.getDepartment_id() != null){
+            Department department = departmentService.findById(postDto.getDepartment_id());
+            if (department != null){
+                post.setDepartmentId(postDto.getDepartment_id());
+            } else {
+                return ResponseEntity.badRequest().body("Department " + post.getDepartmentId() + " not found.");
+            }
+        } else {
+            post.setDepartmentId(origin.getDepartmentId());
+        }
         post.setPremium(postDto.getPremium() != null ? postDto.getPremium() : origin.getPremium());
         post.setId(origin.getId());
         Post updated = postService.update(post);
@@ -74,8 +102,24 @@ public class PostController {
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody PostDto postDto){
         Post post = new Post();
+        if (postDto.getRolename() == null){
+            return ResponseEntity.badRequest().body("Role name not specified");
+        }
+        if (postDto.getDepartment_id() == null){
+            return ResponseEntity.badRequest().body("Department id not specified");
+        }
+        if (postDto.getEmployee_username() == null){
+            return ResponseEntity.badRequest().body("Employee username not specified");
+        }
+
         Role role = roleService.findByName(postDto.getRolename());
+        if (role == null){
+            return ResponseEntity.badRequest().body("Invalid role " + postDto.getRolename());
+        }
         Employee employee = employeeService.findByUsername(postDto.getEmployee_username());
+        if (employee == null){
+            return ResponseEntity.badRequest().body("Invalid employee username " + postDto.getEmployee_username());
+        }
         Post managerPost = postService.findManagerPostByEmployeeId(employee.getId());
         if (managerPost != null && postDto.getRolename() == "manager"){
             return ResponseEntity.badRequest().body("Employee " + employee.getId() + " already has manager role.");
@@ -83,6 +127,10 @@ public class PostController {
         Post robotOperatorPost = postService.findOperatorPostByEmployeeId(employee.getId());
         if (robotOperatorPost != null && roleService.findByName(postDto.getRolename()).getCan_operate_robot()){
             return ResponseEntity.badRequest().body("Employee " + employee.getId() + " already has post with operating robot authority.");
+        }
+        Department department = departmentService.findById(postDto.getDepartment_id());
+        if (department == null){
+            return ResponseEntity.badRequest().body("Invalid department id " + postDto.getDepartment_id());
         }
         post.setRoleId(role.getId());
         post.setEmployeeId(employee.getId());

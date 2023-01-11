@@ -1,5 +1,7 @@
 package com.example.kurs.entity;
 
+import com.example.kurs.dto.SpaceshipRequestDto;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

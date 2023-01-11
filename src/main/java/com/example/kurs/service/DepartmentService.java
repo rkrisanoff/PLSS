@@ -29,4 +29,21 @@ public class DepartmentService {
         log.info("Listed departments.");
         return departments;
     }
+
+    public Department update(Long id, Department department){
+        if (id == null){
+            log.info("Department id is null.");
+            return null;
+        }
+        Department origin = departmentRepo.findById(id).orElse(null);
+        if (origin == null){
+            log.info("Invalid department id.");
+            return null;
+        }
+        Department newDep = new Department();
+        newDep.setCurrent_resource(department.getCurrent_resource() != null ? department.getCurrent_resource() : origin.getCurrent_resource());
+        newDep.setExtracted_bor_quantity(department.getExtracted_bor_quantity() != null ? department.getExtracted_bor_quantity() : origin.getExtracted_bor_quantity());
+        newDep.setId(id);
+        return departmentRepo.save(newDep);
+    }
 }

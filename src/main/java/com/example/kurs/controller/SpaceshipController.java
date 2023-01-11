@@ -65,7 +65,7 @@ public class SpaceshipController {
         return ResponseEntity.ok(jsonProvider.convertToJson(reactors));
     }
 
-   /* @GetMapping("/{id}/work")
+    @GetMapping("/{id}/work")
     public ResponseEntity work(@PathVariable Long id){
         if (id == null){
             return ResponseEntity.badRequest().body("Invalid spaceship id.");
@@ -75,6 +75,9 @@ public class SpaceshipController {
             return ResponseEntity.badRequest().body("Spaceship " + id + " not found.");
         }
         List<MicroreactorType> reactors = reactorService.findBySpaceshipId(id);
+        if (reactors == null || reactors.isEmpty()){
+            return ResponseEntity.ok("Spaceship " + id + " has no reactors.");
+        }
         Integer b2h6cons = 0;
         Integer b5h12cons = 0;
         Integer b10h14cons = 0;
@@ -94,6 +97,12 @@ public class SpaceshipController {
         Department department = departmentService.findById(spaceship.getDepartment_id());
         Integer sum = b2h6cons + b5h12cons + b10h14cons + b12h12cons + spaceship.getIncome();
         department.setCurrent_resource(department.getCurrent_resource() + sum);
-    }*/
+        Department savedDep = departmentService.update(spaceship.getDepartment_id(), department);
+        Spaceship savedShip = spaceshipService.udpateSpaceship(id, spaceship);
+        if (savedShip == null || savedDep == null){
+            return ResponseEntity.badRequest().body("Error while updating spaceship or department balance.");
+        }
+        return ResponseEntity.badRequest().body("Work is done.");
+    }
 
 }

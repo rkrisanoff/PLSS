@@ -92,4 +92,34 @@ public class SpaceshipService {
         }
         return spaceship;
     }
+
+    public Spaceship udpateSpaceship(Long id, Spaceship spaceship){
+        if (id == null){
+            log.info("Spaceship id is null.");
+            return null;
+        }
+        Spaceship origin = spaceshipRepo.findById(id).orElse(null);
+        if (origin == null){
+            log.info("Invlid spaceship id " + id);
+            return null;
+        }
+        Spaceship newShip = new Spaceship();
+        newShip.setIncome(spaceship.getIncome() != null ? spaceship.getIncome() : origin.getIncome());
+        newShip.setB12_h12_quantity(spaceship.getB12_h12_quantity() != null ? spaceship.getB12_h12_quantity() : origin.getB12_h12_quantity());
+        newShip.setB10_h14_quantity(spaceship.getB10_h14_quantity() != null ? spaceship.getB10_h14_quantity() : origin.getB10_h14_quantity());
+        newShip.setB5_h12_quantity(spaceship.getB5_h12_quantity() != null ? spaceship.getB5_h12_quantity() : origin.getB5_h12_quantity());
+        newShip.setB2_h6_quantity(spaceship.getB2_h6_quantity() != null ? spaceship.getB2_h6_quantity() : origin.getB2_h6_quantity());
+
+        if (spaceship.getDepartment_id() != null){
+            Department department = departmentService.findById(spaceship.getDepartment_id());
+            if (department == null){
+                log.info("Invalid deparmtnet id " + spaceship.getDepartment_id());
+                return null;
+            }
+            newShip.setDepartment_id(spaceship.getDepartment_id());
+        } else {
+            newShip.setDepartment_id(origin.getDepartment_id());
+        }
+        return spaceshipRepo.save(newShip);
+    }
 }

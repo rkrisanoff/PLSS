@@ -109,11 +109,30 @@ public class RobotController {
         if (origin == null){
             return ResponseEntity.badRequest().body("Robot " + id + " does not exist");
         }
-        robot.setAsteroid_id(robotDto.getAsteroid_id() != null ? robotDto.getAsteroid_id() : origin.getAsteroid_id());
+        if (robotDto.getOperator_post_id() != null){
+            Post operatorPost = postService.findById(robotDto.getOperator_post_id());
+            Role operatorRole = roleService.findById(operatorPost.getRoleId());
+            if (!operatorRole.getCan_operate_robot()){
+                return ResponseEntity.badRequest().body("New operator post " + robotDto.getOperator_post_id() + " does not have authority to operate robots.");
+            }
+            robot.setOperator_post_id(robotDto.getOperator_post_id());
+        } else {
+            robot.setOperator_post_id(origin.getOperator_post_id());
+        }
+
+        if (robotDto.getAsteroid_id() != null){
+            Post operatorPost = postService.findById(robot.getOperator_post_id());
+            Role role = roleService.findById(operatorPost.getRoleId());
+            if (!role.getCan_operate_robot()){
+                return ResponseEntity.badRequest().body("Operator post " + robot.getOperator_post_id() + " does not have authority to move robot.");
+            }
+            robot.setAsteroid_id(robotDto.getAsteroid_id());
+        } else {
+            robot.setAsteroid_id(origin.getAsteroid_id());
+        }
         robot.setBody_series(robotDto.getBody_series() != null ? robotDto.getBody_series() : origin.getBody_series());
         robot.setBrain_series(robotDto.getBrain_series() != null ? robotDto.getBrain_series() : origin.getBrain_series());
         robot.setEye_series(robotDto.getEye_series() != null ? robotDto.getEye_series() : origin.getEye_series());
-        robot.setOperator_post_id(robotDto.getOperator_post_id() != null ? robotDto.getOperator_post_id() : origin.getOperator_post_id());
         Body body = bodyService.findByReleaseSeries(robot.getBody_series());
         if (body == null){
             return ResponseEntity.badRequest().body("Robot " + robot.getId() + " has invalid body " + robot.getBody_series());

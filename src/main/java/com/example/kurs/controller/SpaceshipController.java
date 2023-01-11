@@ -55,7 +55,7 @@ public class SpaceshipController {
     @GetMapping("/{id}/microreactors")
     public ResponseEntity getReactors(@PathVariable Long id) throws JsonProcessingException {
         if (id == null){
-            return ResponseEntity.badRequest().body("Microreactor id not specified.");
+            return ResponseEntity.badRequest().body("Spaceship id not specified.");
         }
         List<MicroreactorType> reactors = reactorService.findBySpaceshipId(id);
         return ResponseEntity.ok(jsonProvider.convertToJson(reactors));

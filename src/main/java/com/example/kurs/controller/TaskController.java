@@ -3,10 +3,12 @@ package com.example.kurs.controller;
 import com.example.kurs.dto.TaskRequestDto;
 import com.example.kurs.entity.Employee;
 import com.example.kurs.entity.Post;
+import com.example.kurs.entity.Role;
 import com.example.kurs.entity.Task;
 import com.example.kurs.security.jwt.JwtTokenProvider;
 import com.example.kurs.service.EmployeeService;
 import com.example.kurs.service.PostService;
+import com.example.kurs.service.RoleService;
 import com.example.kurs.service.TaskService;
 import com.example.kurs.utils.JsonProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,6 +33,9 @@ public class TaskController {
     private PostService postService;
 
     @Autowired
+    private RoleService roleService;
+
+    @Autowired
     private JsonProvider jsonProvider;
 
     @PostMapping("/create")
@@ -43,8 +48,12 @@ public class TaskController {
         task.setDescription(taskRequestDto.getDescription());
         String token = authHeader.substring(7, authHeader.length());
         Employee creator = employeeService.findByUsername(jwtTokenProvider.getUsername(token));
-        task.setCreator_id(creator.getId());
-        task.setExecutor_id(taskRequestDto.getExecutor_id());
+        Post managerPost = postService.findManagerPostByEmployeeId(creator.getId());
+        if (managerPost != null){
+            return ResponseEntity.badRequest().body("Employee " + creator.getId() + " has no manager authority to create tasks.");
+        }
+        task.setCreatorPostId(managerPost.getId());
+        task.setExecutorPostId(taskRequestDto.getExecutorPostId());
         task.setState(taskRequestDto.getState() != null ? taskRequestDto.getState() : "unknown");
         Task created = taskService.create(task);
         if (created != null){
@@ -63,6 +72,16 @@ public class TaskController {
 
     @PostMapping("/{id}/update")
     public ResponseEntity update(@PathVariable Long id, @RequestBody TaskRequestDto taskRequestDto){
+        if (taskRequestDto.getCreatorPostId() != null){
+            Post newCreatorPost = postService.findById(taskRequestDto.getCreatorPostId());
+            if (newCreatorPost == null){
+                return ResponseEntity.badRequest().body("Invalid creator post id " + taskRequestDto.getCreatorPostId());
+            }
+            Role newCreatorRole = roleService.findById(newCreatorPost.getRoleId());
+            if (newCreatorRole.getName() != "manager"){
+                return ResponseEntity.badRequest().body("New creator post " + taskRequestDto.getCreatorPostId() + " does not have manager authority.");
+            }
+        }
         Task updated = taskService.update(id, taskRequestDto);
         if (updated != null){
             return ResponseEntity.ok("Updated.");

@@ -2,17 +2,21 @@ package com.example.kurs.service;
 
 import com.example.kurs.entity.Post;
 import com.example.kurs.repo.PostRepo;
+import com.example.kurs.repo.RoleRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class PostService {
     @Autowired
     private PostRepo postRepo;
+    @Autowired
+    private RoleRepo roleRepo;
     public Post createPost(Post post){
         if (post.getId() == null || postRepo.findById(post.getId()).orElse(null) == null){
             postRepo.save(post);
@@ -32,7 +36,17 @@ public class PostService {
         }
         return post;
     }
-
+    public Post findManagerPostByEmployeeId(Long id){
+        List<Post> posts = postRepo.findByEmployeeId(id);
+        List<Post> managerPosts = posts.stream()
+                .filter(post -> roleRepo.findById(post.getRoleId()).get().getName() == "manager")
+                .collect(Collectors.toList());
+        if (managerPosts == null || managerPosts.size() <= 0) {
+            log.info("Employee {} does not have manager roles.");
+            return null;
+        }
+        return managerPosts.get(0);
+    }
     public List<Post> getAll(){
         List<Post> posts = postRepo.findAll();
         log.info("Listed posts");
@@ -52,5 +66,17 @@ public class PostService {
         }
         log.info("Post {} does not exist", post.getId());
         return null;
+    }
+
+    public Post findOperatorPostByEmployeeId(Long id) {
+        List<Post> posts = postRepo.findByEmployeeId(id);
+        List<Post> managerPosts = posts.stream()
+                .filter(post -> roleRepo.findById(post.getRoleId()).get().getCan_operate_robot())
+                .collect(Collectors.toList());
+        if (managerPosts == null || managerPosts.size() <= 0) {
+            log.info("Employee {} does not have manager roles.");
+            return null;
+        }
+        return managerPosts.get(0);
     }
 }

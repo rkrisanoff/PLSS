@@ -4,6 +4,7 @@ import com.example.kurs.dto.AuthenticationRequestDto;
 import com.example.kurs.dto.RegistrationRequestDto;
 import com.example.kurs.entity.Employee;
 import com.example.kurs.entity.Post;
+import com.example.kurs.entity.Role;
 import com.example.kurs.exceptions.EmployeeAlreadyExistsException;
 import com.example.kurs.repo.EmployeeRepo;
 import com.example.kurs.repo.PostRepo;
@@ -22,6 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,21 +76,31 @@ public class AuthController {
             if (!password.equals(password_confirmation)){
                 return ResponseEntity.badRequest().body("Password doesn't match password confirmation");
             }
+            List<Role> roles = new ArrayList<>();
+            Long postRoleId = -1L;
+            if (requestDto.getRole() != null){
+                Role role = roleService.findByName(requestDto.getRole());
+                if (role == null){
+                    return ResponseEntity.badRequest().body("Invalid role.");
+                }
+                roles = List.of(roleService.findByName(requestDto.getRole()));
+                postRoleId = roleService.findByName(requestDto.getRole()).getId();
+            }
+
             Employee registerEmployee = new Employee();
             registerEmployee.setUsername(username);
             registerEmployee.setPassword(password);
             registerEmployee.setAge(requestDto.getAge());
-            registerEmployee.setRoles(List.of(roleService.findByName("operator")));
+            registerEmployee.setRoles(requestDto.getRole() != null ? roles : List.of(roleService.findByName("operator")));
             registerEmployee.setFirst_name(requestDto.getFirst_name());
             registerEmployee.setLast_name(requestDto.getLast_name());
             registerEmployee.setPatronymic(requestDto.getPatronymic());
             Employee registered = employeeService.register(registerEmployee);
 
-
             Post registerPost = new Post();
             registerPost.setDepartmentId(1L);
             registerPost.setEmployeeId(employeeService.findByUsername(username).getId());
-            registerPost.setRoleId(roleService.findByName("operator").getId());
+            registerPost.setRoleId(requestDto.getRole() != null ? postRoleId : roleService.findByName("operator").getId());
             registerPost.setPremium(0);
             postService.createPost(registerPost);
             if (registered == null){

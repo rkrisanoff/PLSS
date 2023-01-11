@@ -28,7 +28,7 @@ public class PostController {
     @Autowired
     JsonProvider jsonProvider;
 
-    @PostMapping("/all")
+    @GetMapping("/all")
     public ResponseEntity getAll() throws JsonProcessingException {
         List<Post> posts = postService.getAll();
         String json = jsonProvider.convertToJson(posts);
@@ -50,7 +50,19 @@ public class PostController {
         }
         Role role = roleService.findByName(postDto.getRolename());
         Employee employee = employeeService.findByUsername(postDto.getEmployee_username());
-        post.setRoleId(role != null ? role.getId() : origin.getRoleId());
+        if (postDto.getRolename() != null){
+            Post managerPost = postService.findManagerPostByEmployeeId(id);
+            Post operatorPost = postService.findOperatorPostByEmployeeId(id);
+            if (managerPost != null && postDto.getRolename() == "manager"){
+                return ResponseEntity.badRequest().body("Employee " + employee.getId() + " already has manager post.");
+            }
+            if (operatorPost != null && postDto.getRolename() == "operator"){
+                return ResponseEntity.badRequest().body("Employee " + employee.getId() + " already has operator post.");
+            }
+            post.setRoleId(role.getId());
+        } else {
+            post.setRoleId(origin.getRoleId());
+        }
         post.setEmployeeId(employee != null ? employee.getId() : origin.getEmployeeId());
         post.setDepartmentId(postDto.getDepartment_id() != null ? postDto.getDepartment_id() : origin.getDepartmentId());
         post.setPremium(postDto.getPremium() != null ? postDto.getPremium() : origin.getPremium());
@@ -64,6 +76,14 @@ public class PostController {
         Post post = new Post();
         Role role = roleService.findByName(postDto.getRolename());
         Employee employee = employeeService.findByUsername(postDto.getEmployee_username());
+        Post managerPost = postService.findManagerPostByEmployeeId(employee.getId());
+        if (managerPost != null && postDto.getRolename() == "manager"){
+            return ResponseEntity.badRequest().body("Employee " + employee.getId() + " already has manager role.");
+        }
+        Post robotOperatorPost = postService.findOperatorPostByEmployeeId(employee.getId());
+        if (robotOperatorPost != null && roleService.findByName(postDto.getRolename()).getCan_operate_robot()){
+            return ResponseEntity.badRequest().body("Employee " + employee.getId() + " already has post with operating robot authority.");
+        }
         post.setRoleId(role.getId());
         post.setEmployeeId(employee.getId());
         post.setDepartmentId(postDto.getDepartment_id());

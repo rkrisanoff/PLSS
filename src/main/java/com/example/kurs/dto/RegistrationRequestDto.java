@@ -12,4 +12,5 @@ public class RegistrationRequestDto {
     private String patronymic;
     private Integer age;
     private String gender;
+    private String role;
 }

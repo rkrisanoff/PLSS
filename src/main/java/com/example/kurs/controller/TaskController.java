@@ -49,7 +49,7 @@ public class TaskController {
         String token = authHeader.substring(7, authHeader.length());
         Employee creator = employeeService.findByUsername(jwtTokenProvider.getUsername(token));
         Post managerPost = postService.findManagerPostByEmployeeId(creator.getId());
-        if (managerPost != null){
+        if (managerPost == null){
             return ResponseEntity.badRequest().body("Employee " + creator.getId() + " has no manager authority to create tasks.");
         }
         task.setCreatorPostId(managerPost.getId());

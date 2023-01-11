@@ -1,12 +1,14 @@
 package com.example.kurs.service;
 
 import com.example.kurs.entity.Post;
+import com.example.kurs.entity.Role;
 import com.example.kurs.repo.PostRepo;
 import com.example.kurs.repo.RoleRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,11 +40,19 @@ public class PostService {
     }
     public Post findManagerPostByEmployeeId(Long id){
         List<Post> posts = postRepo.findByEmployeeId(id);
-        List<Post> managerPosts = posts.stream()
-                .filter(post -> roleRepo.findById(post.getRoleId()).get().getName() == "manager")
-                .collect(Collectors.toList());
+        List<Post> managerPosts = new ArrayList<>();
+        for (int i = 0; i < posts.size(); i++){
+            Role role = roleRepo.findById(posts.get(i).getRoleId()).orElse(null);
+            if (role == null){
+                continue;
+            }
+
+            if (role.getName().equals("manager")){
+                managerPosts.add(posts.get(i));
+            }
+        }
         if (managerPosts == null || managerPosts.size() <= 0) {
-            log.info("Employee {} does not have manager roles.");
+            log.info("Employee {} does not have manager roles.", id);
             return null;
         }
         return managerPosts.get(0);

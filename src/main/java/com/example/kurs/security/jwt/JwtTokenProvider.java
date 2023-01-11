@@ -1,8 +1,11 @@
 package com.example.kurs.security.jwt;
 
 import com.example.kurs.entity.Employee;
+import com.example.kurs.entity.Post;
 import com.example.kurs.entity.Role;
 import com.example.kurs.exceptions.JwtAuthenticationException;
+import com.example.kurs.service.EmployeeService;
+import com.example.kurs.service.PostService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +34,10 @@ public class JwtTokenProvider {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private EmployeeService employeeService;
+    @Autowired
+    private PostService postService;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
@@ -43,9 +50,11 @@ public class JwtTokenProvider {
         secret = Base64.getEncoder().encodeToString(secret.getBytes());
     }
     public String createToken(Long id, String username, List<Role> roles){
+        Post post = postService.findOperatorPostByEmployeeId(employeeService.findByUsername(username).getId());
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", getRoleNames(roles));
         claims.put("uid", id);
+        claims.put("post", post.getId());
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
         return Jwts.builder()

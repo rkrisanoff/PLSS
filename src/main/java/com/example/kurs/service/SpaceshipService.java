@@ -79,4 +79,17 @@ public class SpaceshipService {
         log.info("Listed spaceships");
         return spaceshipList;
     }
+
+    public Spaceship findById(Long id){
+        if (id == null){
+            log.info("Spaceship id is null.");
+            return null;
+        }
+        Spaceship spaceship = spaceshipRepo.findById(id).orElse(null);
+        if (spaceship == null){
+            log.info("Invalid spaceship id {}", id);
+            return null;
+        }
+        return spaceship;
+    }
 }

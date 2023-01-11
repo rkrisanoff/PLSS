@@ -61,4 +61,27 @@ public class SpaceshipController {
         return ResponseEntity.ok(jsonProvider.convertToJson(reactors));
     }
 
+   /* @GetMapping("/{id}/work")
+    public ResponseEntity work(@PathVariable Long id){
+        if (id == null){
+            return ResponseEntity.badRequest().body("Invalid spaceship id.");
+        }
+        Spaceship spaceship = spaceshipService.findById(id);
+        if (spaceship == null){
+            return ResponseEntity.badRequest().body("Spaceship " + id + " not found.");
+        }
+        List<MicroreactorType> reactors = reactorService.findBySpaceshipId(id);
+        Integer b2h6cons = 0;
+        Integer b5h12cons = 0;
+        Integer b10h14cons = 0;
+        Integer b12h12cons = 0;
+        for (int i = 0; i < reactors.size(); i++){
+            b2h6cons += reactors.get(i).getB2_h6_consumption_rate();
+            b5h12cons += reactors.get(i).getB5_h12_consumption_rate();
+            b10h14cons += reactors.get(i).getB10_h14_consumption_rate();
+            b12h12cons += reactors.get(i).getB12_h12_consumption_rate();
+        }
+
+    }*/
+
 }

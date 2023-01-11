@@ -51,10 +51,14 @@ public class JwtTokenProvider {
     }
     public String createToken(Long id, String username, List<Role> roles){
         Post post = postService.findOperatorPostByEmployeeId(employeeService.findByUsername(username).getId());
+        Long postId = -1L;
+        if (post != null){
+            postId = post.getId();
+        }
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", getRoleNames(roles));
         claims.put("uid", id);
-        claims.put("post", post.getId());
+        claims.put("post", postId);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
         return Jwts.builder()

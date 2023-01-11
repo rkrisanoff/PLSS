@@ -2,8 +2,10 @@ package com.example.kurs.controller;
 
 import com.example.kurs.dto.SpaceshipRequestDto;
 import com.example.kurs.dto.SpaceshipUpdateRequestDto;
+import com.example.kurs.entity.Department;
 import com.example.kurs.entity.MicroreactorType;
 import com.example.kurs.entity.Spaceship;
+import com.example.kurs.service.DepartmentService;
 import com.example.kurs.service.ReactorService;
 import com.example.kurs.service.SpaceshipService;
 import com.example.kurs.utils.JsonProvider;
@@ -22,6 +24,8 @@ public class SpaceshipController {
 
     @Autowired
     private ReactorService reactorService;
+    @Autowired
+    private DepartmentService departmentService;
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody SpaceshipRequestDto spaceshipRequestDto){
         Spaceship spaceship = spaceshipService.create(spaceshipRequestDto);
@@ -81,7 +85,15 @@ public class SpaceshipController {
             b10h14cons += reactors.get(i).getB10_h14_consumption_rate();
             b12h12cons += reactors.get(i).getB12_h12_consumption_rate();
         }
+        spaceship.setB2_h6_quantity(spaceship.getB2_h6_quantity() - b2h6cons);
+        spaceship.setB5_h12_quantity(spaceship.getB5_h12_quantity() - b5h12cons);
+        spaceship.setB10_h14_quantity(spaceship.getB10_h14_quantity() - b10h14cons);
+        spaceship.setB12_h12_quantity(spaceship.getB12_h12_quantity() - b12h12cons);
+        spaceship.setIncome(spaceship.getIncome() + 100);
 
+        Department department = departmentService.findById(spaceship.getDepartment_id());
+        Integer sum = b2h6cons + b5h12cons + b10h14cons + b12h12cons + spaceship.getIncome();
+        department.setCurrent_resource(department.getCurrent_resource() + sum);
     }*/
 
 }

@@ -126,6 +126,7 @@ public class RobotController {
             if (!role.getCan_operate_robot()){
                 return ResponseEntity.badRequest().body("Operator post " + robot.getOperator_post_id() + " does not have authority to move robot.");
             }
+
             robot.setAsteroid_id(robotDto.getAsteroid_id());
         } else {
             robot.setAsteroid_id(origin.getAsteroid_id());
@@ -159,7 +160,7 @@ public class RobotController {
         Post operator_post = postService.findById(robot.getOperator_post_id());
         Role operator_role = roleService.findById(operator_post.getRoleId());
         if (!operator_role.getCan_operate_robot()){
-            return ResponseEntity.badRequest().body("Robot is attached to employee, that cannot operate robots.");
+            return ResponseEntity.badRequest().body("Robot " + robot_id + " is attached to employee, that cannot operate robots.");
         }
         ExtractionStatus status = robotService.extract(robot, deposit_id, operator_post.getDepartmentId());
         String msg = "OK";

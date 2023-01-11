@@ -86,7 +86,10 @@ public class RobotService {
             log.info("Deposit {} not found.", deposit_id);
             return ExtractionStatus.NO_DEPOSIT;
         }
-        if (deposit.getAsteroid_id() != asteroid_id){
+        System.out.println("asteroid_id = " + asteroid_id);
+        System.out.println("deposit asteroid id = " + deposit.getAsteroid_id());
+        System.out.println(asteroid_id != deposit.getAsteroid_id());
+        if (!deposit.getAsteroid_id().equals(asteroid_id)){
             return ExtractionStatus.NOT_ON_TARGET_ASTEROID;
         }
         Long brain_series = robot.getBrain_series();

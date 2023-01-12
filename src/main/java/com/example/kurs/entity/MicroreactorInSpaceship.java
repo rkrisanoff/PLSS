@@ -7,11 +7,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@IdClass(MicroreactorInSpaceship.class)
 public class MicroreactorInSpaceship implements Serializable {
     @Id
     private Long microreactorTypeId;
-    @Id
     private Long spaceshipId;
     private Date deploy_date;
 

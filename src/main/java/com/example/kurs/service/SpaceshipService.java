@@ -109,6 +109,7 @@ public class SpaceshipService {
         newShip.setB10_h14_quantity(spaceship.getB10_h14_quantity() != null ? spaceship.getB10_h14_quantity() : origin.getB10_h14_quantity());
         newShip.setB5_h12_quantity(spaceship.getB5_h12_quantity() != null ? spaceship.getB5_h12_quantity() : origin.getB5_h12_quantity());
         newShip.setB2_h6_quantity(spaceship.getB2_h6_quantity() != null ? spaceship.getB2_h6_quantity() : origin.getB2_h6_quantity());
+        newShip.setId(id);
 
         if (spaceship.getDepartment_id() != null){
             Department department = departmentService.findById(spaceship.getDepartment_id());

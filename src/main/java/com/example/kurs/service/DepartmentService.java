@@ -17,9 +17,9 @@ public class DepartmentService {
     public Department findById(Long id){
         Department department = departmentRepo.findById(id).orElse(null);
         if (department != null){
-            log.info("Department {} not found.", id);
-        } else {
             log.info("Department {} found.", id);
+        } else {
+            log.info("Department {} not found.", id);
         }
         return department;
     }

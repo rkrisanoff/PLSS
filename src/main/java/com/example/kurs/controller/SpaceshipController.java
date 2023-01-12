@@ -135,7 +135,7 @@ public class SpaceshipController {
         spaceship.setB2_h6_quantity(spaceship.getB2_h6_quantity() != null ? spaceship.getB2_h6_quantity() + b2 : b2);
         spaceship.setB5_h12_quantity(spaceship.getB5_h12_quantity() != null ? spaceship.getB5_h12_quantity() + b5 : b5);
         spaceship.setB10_h14_quantity(spaceship.getB10_h14_quantity() != null ? spaceship.getB10_h14_quantity() + b10 : b10);
-        spaceship.setB12_h12_quantity(spaceship.getB12_h12_quantity() != null ? spaceship.getB12_h12_quantity() + b12 : b12);
+        spaceship.setB12_h12_quantity(spaceship.getB12_h12_quantity() != null ? spaceship.getB12_h12_quantity() + b12 : b12 );
         Spaceship savedShip = spaceshipService.udpateSpaceship(id, spaceship);
         Department savedDep = departmentService.update(department.getId(), department);
         if (savedShip == null || savedDep == null){

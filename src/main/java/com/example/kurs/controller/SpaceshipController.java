@@ -63,6 +63,9 @@ public class SpaceshipController {
             return ResponseEntity.badRequest().body("Spaceship id not specified.");
         }
         List<MicroreactorType> reactors = reactorService.findBySpaceshipId(id);
+        if (reactors == null || reactors.isEmpty()){
+            return ResponseEntity.badRequest().body("Microreactors in spaceship " + id + " not found");
+        }
         return ResponseEntity.ok(jsonProvider.convertToJson(reactors));
     }
 

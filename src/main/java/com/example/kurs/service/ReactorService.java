@@ -35,7 +35,14 @@ public class ReactorService {
             return null;
         }
         log.info("Listed reactors in {} spaceship.", id);
-        return reactorInShipRepo.findBySpaceshipId(id).stream()
+        List<MicroreactorInSpaceship> microreactorInSpaceships = reactorInShipRepo.findBySpaceshipId(id);
+        if (microreactorInSpaceships == null){
+            log.info("Microreactors in spaceship " + id + " not found");
+            return null;
+        }
+
+        return microreactorInSpaceships.stream()
+                .filter(reactorInShip -> reactorInShip != null)
                 .map(reactorInShip -> reactorRepo.findById(reactorInShip.getMicroreactorTypeId()).get())
                 .distinct()
                 .collect(Collectors.toList());

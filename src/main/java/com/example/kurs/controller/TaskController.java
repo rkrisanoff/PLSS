@@ -1,5 +1,6 @@
 package com.example.kurs.controller;
 
+import com.example.kurs.dto.RecycleDto;
 import com.example.kurs.dto.TaskRequestDto;
 import com.example.kurs.entity.Employee;
 import com.example.kurs.entity.Post;
@@ -85,7 +86,7 @@ public class TaskController {
                 return ResponseEntity.badRequest().body("Invalid creator post id " + taskRequestDto.getCreatorPostId());
             }
             Role newCreatorRole = roleService.findById(newCreatorPost.getRoleId());
-            if (newCreatorRole.getName() != "manager"){
+            if (!newCreatorRole.getName().equals("manager")){
                 return ResponseEntity.badRequest().body("New creator post " + taskRequestDto.getCreatorPostId() + " does not have manager authority.");
             }
         }
@@ -102,4 +103,6 @@ public class TaskController {
             return ResponseEntity.badRequest().body("Task " + id + " does not exist.");
         }
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.kurs.controller;
 
+import com.example.kurs.dto.RecycleDto;
 import com.example.kurs.dto.SpaceshipRequestDto;
 import com.example.kurs.dto.SpaceshipUpdateRequestDto;
 import com.example.kurs.entity.Department;
@@ -105,5 +106,34 @@ public class SpaceshipController {
         return ResponseEntity.ok("Work is done.");
     }
 
-
+    @PostMapping("/{id}/recycle")
+    public ResponseEntity recycle(@PathVariable Long id, @RequestBody RecycleDto recycleDto){
+        if (id == null){
+            return ResponseEntity.badRequest().body("Spaceship id is invalid.");
+        }
+        Spaceship spaceship = spaceshipService.findById(id);
+        if (spaceship == null){
+            return ResponseEntity.badRequest().body("Spaceship id " + id + " is invalid.");
+        }
+        Integer b2 = recycleDto.getB2_h6_quantity();
+        Integer b5 = recycleDto.getB5_h12_quantity();
+        Integer b10 = recycleDto.getB10_h14_quantity();
+        Integer b12 = recycleDto.getB12_h12_quantity();
+        Integer sum = b2 + b5 + b10 + b12;
+        Department department = departmentService.findById(spaceship.getDepartment_id());
+        if (department.getExtracted_bor_quantity() < sum){
+            return ResponseEntity.badRequest().body("Not enough extracted bor in department " + spaceship.getDepartment_id());
+        }
+        department.setExtracted_bor_quantity(department.getExtracted_bor_quantity() - sum);
+        spaceship.setB2_h6_quantity(spaceship.getB2_h6_quantity() + b2);
+        spaceship.setB5_h12_quantity(spaceship.getB5_h12_quantity() + b5);
+        spaceship.setB10_h14_quantity(spaceship.getB10_h14_quantity() + b10);
+        spaceship.setB12_h12_quantity(spaceship.getB12_h12_quantity() + b12);
+        Spaceship savedShip = spaceshipService.udpateSpaceship(id, spaceship);
+        Department savedDep = departmentService.update(department.getId(), department);
+        if (savedShip == null || savedDep == null){
+            return ResponseEntity.badRequest().body("Some error occurred while updating department and spaceship");
+        }
+        return ResponseEntity.ok("Recycled.");
+    }
 }

@@ -65,7 +65,7 @@ public class RobotController {
         if (robotDto.getBrain_series() == null){
             return ResponseEntity.badRequest().body("No brain specified.");
         }else {
-            PositronicBrain brain = brainService.findByReleaseSeries(robotDto.getBody_series());
+            PositronicBrain brain = brainService.findByReleaseSeries(robotDto.getBrain_series());
             if (brain == null) {
                 return ResponseEntity.badRequest().body("Invalid brain id " + robotDto.getBrain_series());
             }

@@ -6,6 +6,7 @@ import com.example.kurs.dto.SpaceshipUpdateRequestDto;
 import com.example.kurs.entity.Department;
 import com.example.kurs.entity.MicroreactorType;
 import com.example.kurs.entity.Spaceship;
+import com.example.kurs.repo.SpaceshipRepo;
 import com.example.kurs.service.DepartmentService;
 import com.example.kurs.service.ReactorService;
 import com.example.kurs.service.SpaceshipService;
@@ -27,6 +28,9 @@ public class SpaceshipController {
     private ReactorService reactorService;
     @Autowired
     private DepartmentService departmentService;
+    @Autowired
+    private SpaceshipRepo spaceshipRepo;
+
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody SpaceshipRequestDto spaceshipRequestDto){
         Spaceship spaceship = spaceshipService.create(spaceshipRequestDto);
@@ -118,20 +122,20 @@ public class SpaceshipController {
         if (spaceship == null){
             return ResponseEntity.badRequest().body("Spaceship id " + id + " is invalid.");
         }
-        Integer b2 = recycleDto.getB2_h6_quantity();
-        Integer b5 = recycleDto.getB5_h12_quantity();
-        Integer b10 = recycleDto.getB10_h14_quantity();
-        Integer b12 = recycleDto.getB12_h12_quantity();
+        Integer b2 = recycleDto.getB2_h6_quantity() != null ? recycleDto.getB2_h6_quantity() : 0;
+        Integer b5 = recycleDto.getB5_h12_quantity() != null ? recycleDto.getB5_h12_quantity() : 0;
+        Integer b10 = recycleDto.getB10_h14_quantity() != null ? recycleDto.getB10_h14_quantity() : 0;
+        Integer b12 = recycleDto.getB12_h12_quantity() != null ? recycleDto.getB12_h12_quantity() : 0;
         Integer sum = b2 + b5 + b10 + b12;
         Department department = departmentService.findById(spaceship.getDepartment_id());
         if (department.getExtracted_bor_quantity() < sum){
             return ResponseEntity.badRequest().body("Not enough extracted bor in department " + spaceship.getDepartment_id());
         }
         department.setExtracted_bor_quantity(department.getExtracted_bor_quantity() - sum);
-        spaceship.setB2_h6_quantity(spaceship.getB2_h6_quantity() + b2);
-        spaceship.setB5_h12_quantity(spaceship.getB5_h12_quantity() + b5);
-        spaceship.setB10_h14_quantity(spaceship.getB10_h14_quantity() + b10);
-        spaceship.setB12_h12_quantity(spaceship.getB12_h12_quantity() + b12);
+        spaceship.setB2_h6_quantity(spaceship.getB2_h6_quantity() != null ? spaceship.getB2_h6_quantity() + b2 : b2);
+        spaceship.setB5_h12_quantity(spaceship.getB5_h12_quantity() != null ? spaceship.getB5_h12_quantity() + b5 : b5);
+        spaceship.setB10_h14_quantity(spaceship.getB10_h14_quantity() != null ? spaceship.getB10_h14_quantity() + b10 : b10);
+        spaceship.setB12_h12_quantity(spaceship.getB12_h12_quantity() != null ? spaceship.getB12_h12_quantity() + b12 : b12);
         Spaceship savedShip = spaceshipService.udpateSpaceship(id, spaceship);
         Department savedDep = departmentService.update(department.getId(), department);
         if (savedShip == null || savedDep == null){

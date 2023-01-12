@@ -110,7 +110,7 @@ public class SpaceshipController {
         if (savedShip == null || savedDep == null){
             return ResponseEntity.badRequest().body("Error while updating spaceship or department balance.");
         }
-        return ResponseEntity.ok("Work is done.");
+        return ResponseEntity.ok("Work is done. Progress saved to spaceship " + savedShip.getId());
     }
 
     @PostMapping("/{id}/recycle")
@@ -141,6 +141,6 @@ public class SpaceshipController {
         if (savedShip == null || savedDep == null){
             return ResponseEntity.badRequest().body("Some error occurred while updating department and spaceship");
         }
-        return ResponseEntity.ok("Recycled.");
+        return ResponseEntity.ok("Recycled. Progress saved to spaceship " + spaceship.getId());
     }
 }

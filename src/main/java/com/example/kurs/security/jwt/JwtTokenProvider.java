@@ -33,8 +33,7 @@ public class JwtTokenProvider {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
+        return new BCryptPasswordEncoder();
     }
 
     @PostConstruct
@@ -64,8 +63,8 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public String getId(String token){
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getId();
+    public Long getId(String token){
+        return Long.valueOf(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getId());
     }
 
     public String resolveToken(HttpServletRequest req){

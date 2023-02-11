@@ -24,5 +24,5 @@ public class UserController {
 
 
         return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
+}
 }

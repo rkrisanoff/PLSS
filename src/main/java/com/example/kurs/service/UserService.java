@@ -26,7 +26,7 @@ public class UserService {
             return null;
         }
         User registered_user = userRepo.save(user);
-        log.info("Registered employee {}.", registered_user.toString());
+        log.info("Registered employee {}.", registered_user);
         return registered_user;
     }
 

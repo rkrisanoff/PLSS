@@ -11,7 +11,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 //    @Autowired
-//    private RoleService roleService;
+//    private RoleService;
     @GetMapping("/{id}/delete")
     public ResponseEntity delete(@PathVariable Long id){
         userService.deleteById(id);

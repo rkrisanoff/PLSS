@@ -17,9 +17,11 @@ public class User {
     @Getter @Setter    private String username;
     @Getter @Setter
     private String password;
+    @Getter @Setter
+    private String email;
     @Enumerated(EnumType.STRING)
     @Column(name="role")
-    @Getter
+    @Getter @Setter
     private Role role;
 
     public User() {

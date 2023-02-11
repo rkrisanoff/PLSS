@@ -5,7 +5,8 @@ public enum Kitchen {
 
     CHINESE ("CHINESE"),
     ITALIAN ("ITALIAN"),
-    JAPAN ("japan");
+    JAPAN ("japan"),
+    NONE("none");
     private final String name;
     Kitchen(String name) {
         this.name = name;

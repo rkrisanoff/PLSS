@@ -15,6 +15,7 @@ public class Recipe {
     private Long id;
     @Column(name = "author_id")
     @Getter
+    @Setter
     private Long authorId;
     @Getter
     @Setter
@@ -29,7 +30,7 @@ public class Recipe {
     @Setter
     private Status status;
     @Enumerated(EnumType.STRING)
-    @Getter
+    @Getter @Setter
     private Kitchen kitchen;
 
     public Recipe() {

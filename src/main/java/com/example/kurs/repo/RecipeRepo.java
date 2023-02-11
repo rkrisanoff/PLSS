@@ -5,4 +5,5 @@ import com.example.kurs.entity.User;
 import org.springframework.data.repository.CrudRepository;
 
 public interface RecipeRepo extends CrudRepository<Recipe, Long> {
+    Recipe save(Recipe recipe);
 }

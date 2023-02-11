@@ -30,22 +30,6 @@ public class UserService {
         return registered_user;
     }
 
-    public List<User> getAll() {
-        List<User> result = (List<User>) userRepo.findAll();
-        return result;
-    }
-
-
-    public User getById(Long id){
-        Optional<User> user = userRepo.findById(id);
-        if (!user.isPresent()){
-            log.info("User with id {} not found.", id);
-            return null;
-        }
-        log.info("Found user with id {}.", id);
-        return user.get();
-
-    }
 
     public User getByUsername(String username){
         Optional<User> user = Optional.ofNullable(userRepo.findByUsername(username));
@@ -57,8 +41,35 @@ public class UserService {
         return user.get();
     }
 
-    public void deleteById(Long id){
-        userRepo.deleteById(id);
-        log.info("Employee with id {} deleted.", id);
+
+//    public List<User> getAll() {
+//        List<User> result = (List<User>) userRepo.findAll();
+//        return result;
+//    }
+//
+//
+    public User getById(Long id){
+        Optional<User> user = userRepo.findById(id);
+        if (!user.isPresent()){
+            log.info("User with id {} not found.", id);
+            return null;
+        }
+        log.info("Found user with id {}.", id);
+        return user.get();
+
     }
+    public Boolean existsById(Long id){
+        Optional<User> user = userRepo.findById(id);
+        if (!user.isPresent()){
+            log.info("User with id {} not found.", id);
+            return false;
+        }
+        log.info("Found user with id {}.", id);
+        return  true;
+
+    }
+//    public void deleteById(Long id){
+//        userRepo.deleteById(id);
+//        log.info("Employee with id {} deleted.", id);
+//    }
 }

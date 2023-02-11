@@ -55,7 +55,6 @@ public class UserService {
         }
         log.info("Found user with username {}.", username);
         return user.get();
-
     }
 
     public void deleteById(Long id){

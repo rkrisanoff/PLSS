@@ -5,13 +5,12 @@ import com.example.kurs.entity.Kitchen;
 import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.Status;
 import com.example.kurs.repo.RecipeRepo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import javax.xml.crypto.dsig.keyinfo.KeyInfo;
-import java.lang.reflect.Array;
 import java.util.*;
 
 @Slf4j
@@ -19,6 +18,8 @@ import java.util.*;
 public class RecipeService {
     @Autowired
     private RecipeRepo recipeRepo;
+    @Autowired
+    private ObjectMapper ObjectMapper;
 
     public Recipe getById(Long id){
         Optional<Recipe> recipe = recipeRepo.findById(id);
@@ -81,24 +82,37 @@ public class RecipeService {
                 return false;
             }else{
                 recipe.setAuthorId(id);
+                recipe.setStatus(Status.MODERATION);
                 recipeRepo.save(recipe);
                 return true;
             }
     }
 
 
-    public List<Recipe> getAll(){
-        return (List<Recipe>) recipeRepo.findAll();
-    }
-
-    public void changeStatus(Long id, Status status){
-        Optional<Recipe> recipe = recipeRepo.findById(id);
-        if (!recipe.isPresent()){
-            log.info("Recipe with id {} not found.", id);
-            return;
+   public String getAllRecipeOnModeration(){
+        String stringForReturn=null;
+        List<Recipe> entitys=recipeRepo.findByStatus(Status.MODERATION.getName());
+        try {
+            stringForReturn=ObjectMapper.writeValueAsString(entitys);
+        }catch (JsonProcessingException e){
+            return stringForReturn;
         }
-        log.info("Found recipe with id {}.", id);
-        recipe.get().setStatus(status);
-        recipeRepo.save(recipe.get());
+
+        return stringForReturn;
+   }
+   public String getRecipeOnModerationId(Long id){
+       String stringForReturn=null;
+       Optional<Recipe> entity=recipeRepo.findById(id);
+       try {
+           stringForReturn=ObjectMapper.writeValueAsString(entity);
+       }catch (JsonProcessingException e){
+           return stringForReturn;
+       }
+
+       return stringForReturn;
+   }
+
+    public Integer changeStatus(Long id, String status){
+        return recipeRepo.setStatusForRecipe(status,id);
     }
 }

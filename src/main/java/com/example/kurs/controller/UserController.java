@@ -27,7 +27,10 @@ public class UserController {
         Long userId= jwtTokenProvider.getId(token);
         if(userService.existsById(userId)){
             recipeService.pushNewResive(requestRecipe,userId);
-        }else{}
+        }else{
+
+            return new ResponseEntity<>("json does not match json schema", HttpStatus.valueOf(420));
+        }
 
 
         return new ResponseEntity<>("Success", HttpStatus.OK);

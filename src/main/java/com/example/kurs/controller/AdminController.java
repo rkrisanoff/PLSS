@@ -22,7 +22,7 @@ public class AdminController {
     @GetMapping("/recipe/all")
     public ResponseEntity<String> allRecipe() {
         String bodyResponse=recipeService.getAllRecipeOnModeration();
-        if(bodyResponse.equals(null)){
+        if(bodyResponse==null){
             return new ResponseEntity<>("failed to generate response", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(bodyResponse, HttpStatus.OK);
@@ -30,14 +30,14 @@ public class AdminController {
     @GetMapping("/recipe/{id}")
     public ResponseEntity<String> recipeId(@PathVariable("id") Long id) {
         String bodyResponse=recipeService.getRecipeOnModerationId(id);
-        if(bodyResponse.equals(null)){
+        if(bodyResponse==null){
             return new ResponseEntity<>("failed to generate response", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(bodyResponse, HttpStatus.OK);
     }
     @PatchMapping("/recipe/{id}")
-    public ResponseEntity<String> getRecipeId(@RequestParam("status") String status, @PathVariable("id") Long id) {
-        Integer countUpdate = recipeService.changeStatus(id, status);
+    public ResponseEntity<String> getRecipeId(@RequestParam(name = "status") String status, @PathVariable("id") Long id) {
+        Integer countUpdate = recipeService.changeStatus(id, Status.valueOf(status));
         if(countUpdate==1){
             return new ResponseEntity<>(countUpdate.toString(), HttpStatus.OK);
         }else {

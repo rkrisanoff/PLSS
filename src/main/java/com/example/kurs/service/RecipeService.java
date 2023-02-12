@@ -83,9 +83,9 @@ public class RecipeService {
 
     public String getAllRecipeOnModeration() {
         String stringForReturn = null;
-        List<Recipe> entitys = recipeRepo.findByStatus(Status.MODERATION.getName());
+        List<Recipe> entities = recipeRepo.findByStatus(Status.MODERATION);
         try {
-            stringForReturn = ObjectMapper.writeValueAsString(entitys);
+            stringForReturn = ObjectMapper.writeValueAsString(entities);
         } catch (JsonProcessingException e) {
             return stringForReturn;
         }
@@ -105,7 +105,7 @@ public class RecipeService {
         return stringForReturn;
     }
 
-    public Integer changeStatus(Long id, String status) {
+    public Integer changeStatus(Long id, Status status) {
         return recipeRepo.setStatusForRecipe(status, id);
     }
 }

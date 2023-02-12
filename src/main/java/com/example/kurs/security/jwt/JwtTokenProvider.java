@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -64,7 +63,7 @@ public class JwtTokenProvider {
     }
 
     public Long getId(String token){
-        return Long.valueOf(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getId());
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("uid",Long.class);
     }
 
     public String resolveToken(HttpServletRequest req){

@@ -3,8 +3,8 @@ package com.example.kurs.entity;
 public enum Kitchen {
     RUSSIAN ("russian"),
 
-    CHINESE ("CHINESE"),
-    ITALIAN ("ITALIAN"),
+    CHINESE ("chinese"),
+    ITALIAN ("italian"),
     JAPAN ("japan"),
     NONE("none");
     private final String name;

@@ -94,16 +94,8 @@ public class RecipeService {
         return stringForReturn;
     }
 
-    public String getRecipeOnModerationId(Long id) {
-        String stringForReturn = null;
-        Optional<Recipe> entity = recipeRepo.findById(id);
-        try {
-            stringForReturn = ObjectMapper.writeValueAsString(entity);
-        } catch (JsonProcessingException e) {
-            return stringForReturn;
-        }
-
-        return stringForReturn;
+    public Optional<Recipe>  getRecipeOnModerationId(Long id) {
+        return recipeRepo.findById(id);
     }
     @Transactional
 

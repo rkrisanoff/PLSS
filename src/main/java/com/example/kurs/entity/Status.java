@@ -1,10 +1,10 @@
 package com.example.kurs.entity;
 
 public enum Status {
-    MODERATION ("moderation"),
+    MODERATION ("MODERATION"),
 
-    PUBLISHED ("published"),
-    REJECTED ("rejected");
+    APPROVED ("APPROVED"),
+    REJECTED ("REJECTED");
     private final String name;
     Status(String name) {
         this.name = name;

@@ -6,8 +6,8 @@ import lombok.Getter;
 import javax.persistence.*;
 
 public enum Role {
-    USER ("user"),
-     MODERATOR ("moderator");
+    USER ("USER"),
+     ADMIN ("ADMIN");
     private final String name;
 
     Role(String name) {

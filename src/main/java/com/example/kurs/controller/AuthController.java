@@ -57,19 +57,22 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody SignupDto signupDto){
         try{
-            String username = signupDto.getUsername();
-            String password = signupDto.getPassword();
-            String email = signupDto.getEmail();
+            Optional<String> username = Optional.ofNullable(signupDto.getUsername());
+            Optional<String> password = Optional.ofNullable(signupDto.getPassword());
+            Optional<String> email = Optional.ofNullable(signupDto.getEmail());
+            if (!(username.isPresent() || password.isPresent() || email.isPresent())){
+                return ResponseEntity.status(421).body("Incorrect username or password");
+            }
 
             User registerUser = new User();
-            registerUser.setUsername(username);
-            registerUser.setPassword(password);
-            registerUser.setEmail(email);
+            registerUser.setUsername(username.get());
+            registerUser.setPassword(password.get());
+            registerUser.setEmail(email.get());
             registerUser.setRole(Role.USER);
             User registered = userService.register(registerUser);
 
             if (registered == null){
-                return ResponseEntity.badRequest().body("User " + username + " already exists");
+                return ResponseEntity.status(422).body("User " + username + " already exists");
             }
             return ResponseEntity.ok("Registered");
         } catch (Exception e){

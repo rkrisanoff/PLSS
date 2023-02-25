@@ -1,6 +1,7 @@
 package com.example.kurs.security.jwt;
 
 import com.example.kurs.entity.Role;
+import com.example.kurs.entity.User;
 import com.example.kurs.exceptions.JwtAuthenticationException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,10 +41,10 @@ public class JwtTokenProvider {
     protected void init(){
         secret = Base64.getEncoder().encodeToString(secret.getBytes());
     }
-    public String createToken(Long id, String username, List<Role> role){
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put("role", getRoleNames(role));
-        claims.put("uid", id);
+    public String createToken(User user) {
+        Claims claims = Jwts.claims().setSubject(user.getUsername());
+        claims.put("role", getRoleNames(Collections.singletonList(user.getRole())));
+        claims.put("uid", user.getId());
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
         return Jwts.builder()
@@ -69,7 +71,7 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest req){
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer_")){
-            return bearerToken.substring(7, bearerToken.length());
+            return bearerToken.substring(7);
         }
         return null;
     }
@@ -85,6 +87,6 @@ public class JwtTokenProvider {
 
     private List<String> getRoleNames(List<Role> roles){
         return roles.stream()
-                .map(role -> role.getName()).collect(Collectors.toList());
+                .map(Role::getName).collect(Collectors.toList());
     }
 }

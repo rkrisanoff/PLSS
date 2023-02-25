@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8e7eaf74-37c6-4a43-ab69-09109649cbf0",
+		"_postman_id": "c5b5559d-6a42-4395-82a0-b022acc791c0",
 		"name": "Lab1",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -23,12 +23,12 @@
 							"raw": "{\"username\":\"xyz\",\"password\":\"xyz\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/auth/signin",
+							"raw": "http://localhost:6969/api/v1/auth/signin",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "6969",
 							"path": [
 								"api",
 								"v1",
@@ -54,12 +54,12 @@
 							"raw": "{\"username\":\"admin\",\"password\":\"admin\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/auth/signin",
+							"raw": "http://localhost:6969/api/v1/auth/signin",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "6969",
 							"path": [
 								"api",
 								"v1",
@@ -82,15 +82,15 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"username\":\"xyz\",\"password\":\"xyz\",\"email\":\"email@email\"}"
+							"raw": "{\"username\":\"lox\",\"password\":\"lox\",\"email\":\"lox@ava\"}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/auth/signup",
+							"raw": "http://localhost:6969/api/v1/auth/signup",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "6969",
 							"path": [
 								"api",
 								"v1",
@@ -107,18 +107,68 @@
 			"name": "admin",
 			"item": [
 				{
-					"name": "get recipes",
+					"name": "get all recipes",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4eXoiLCJyb2xlIjpbIkFETUlOIl0sInVpZCI6MiwiaWF0IjoxNjc2Mzk5NDYwLCJleHAiOjE2NzY0MDMwNjB9.BDdqhJrAjo54lcvAFw8kgnLmeFshylPXbpb8hconL8I",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6969/api/v1/admin/recipe/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6969",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"recipe",
+								"all"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "get the recipe",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4eXoiLCJyb2xlIjpbIkFETUlOIl0sInVpZCI6MiwiaWF0IjoxNjc2Mzk5NDYwLCJleHAiOjE2NzY0MDMwNjB9.BDdqhJrAjo54lcvAFw8kgnLmeFshylPXbpb8hconL8I",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:6969/api/v1/admin/recipe/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6969",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"recipe",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
@@ -130,7 +180,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOlsidXNlciJdLCJ1aWQiOjIsImlhdCI6MTY3NjIzNjYwMSwiZXhwIjoxNjc2MjQwMjAxfQ.siiaaRfuMCP89moH7_iB61zdBWTpO9YnFq6YuBXs8UY",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4eXoiLCJyb2xlIjpbIkFETUlOIl0sInVpZCI6MiwiaWF0IjoxNjc2Mzk5NDYwLCJleHAiOjE2NzY0MDMwNjB9.BDdqhJrAjo54lcvAFw8kgnLmeFshylPXbpb8hconL8I",
 									"type": "string"
 								}
 							]
@@ -145,27 +195,21 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "{\n    \"status\":\"REJECTED\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/admin/recipe/1?status=PUBLISHED",
+							"raw": "http://localhost:6969/api/v1/admin/recipe/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "6969",
 							"path": [
 								"api",
 								"v1",
 								"admin",
 								"recipe",
-								"1"
-							],
-							"query": [
-								{
-									"key": "status",
-									"value": "PUBLISHED"
-								}
+								"3"
 							]
 						}
 					},
@@ -177,10 +221,44 @@
 			"name": "user",
 			"item": [
 				{
-					"name": "New Request",
+					"name": "Add recipe",
 					"request": {
-						"method": "GET",
-						"header": []
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsb3giLCJyb2xlIjpbIlVTRVIiXSwidWlkIjo2LCJpYXQiOjE2NzYzOTkzMzMsImV4cCI6MTY3NjQwMjkzM30.qG1gGbvr3aUJoQKi2wtTUiF4kBTs2rihfqBY0o3kmaM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Жареное мороженное \",\n  \"description\": \"Мороженные мороженное (покупные или слепленные собственноручно)выложить на сковороду, смазанную растительным маслом и поставить на огоньслегка меньше максимального (я ставлю на 5 из 6).\\nПоджарить пельмороженное с обоих сторон.\\nВоду смешать с солью и специями и залить ей мороженное. (Внимание!Заливая водой сразу же закрыть крышку, сильно будет брызгать.\\nКак только вся вода испарится, снять с огня. Желательно на соль пробовать бульон, я сегодня добавила туда еще кубик магги и в результате немного пересолила\\n Подавать со сметаной, майонезом, кетчупом, аджикой, в общем кому как нравится!\",\n  \"kitchen\": \"russian\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:6969/api/v1/user/add-recipe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6969",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"add-recipe"
+							]
+						}
 					},
 					"response": []
 				}

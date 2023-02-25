@@ -1,0 +1,5 @@
+- validation - everywhere
+- remade code errors on sign in
+- paging 
+- ControllerAdvice
+- delegate бизнес logic to services

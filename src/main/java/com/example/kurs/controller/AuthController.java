@@ -20,10 +20,6 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     private UserService userService;

@@ -30,27 +30,15 @@ public class UserService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    public void register(SignupDto signupDto) throws Exception {
+    public void register(SignupDto signupDto) throws UserAlreadyExistsException {
 
-        Optional<String> username = Optional.ofNullable(signupDto.getUsername());
-        if (!username.isPresent()) {
-            throw new Exception("Username {} doesn't present");
-        }
-        Optional<String> password = Optional.ofNullable(signupDto.getPassword());
-        if (!password.isPresent()) {
-            throw new Exception("Password {} doesn't present");
-        }
-        Optional<String> email = Optional.ofNullable(signupDto.getEmail());
-        if (!email.isPresent()) {
-            throw new Exception("Email {} doesn't present");
-        }
 
         User user = new User();
-        user.setUsername(username.get());
-        user.setEmail(email.get());
+        user.setUsername(signupDto.getUsername());
+        user.setEmail(signupDto.getEmail());
         user.setRole(Role.USER);
 
-        user.setPassword(passwordEncoder.encode(password.get()));
+        user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
 
         if (userRepo.findByUsername(user.getUsername()) != null) {
             log.info("User {} registered. Already exists.", user.getUsername());

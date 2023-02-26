@@ -23,8 +23,7 @@ public class UserController {
     @PostMapping("/add-recipe")
     public ResponseEntity<String> createUser(@RequestBody RecipeDto requestRecipe, @RequestHeader HttpHeaders header) {
         String jwt=header.getFirst("Authorization");
-        String token = jwt.substring(7);
-        Long userId= jwtTokenProvider.getId(token);
+        Long userId= jwtTokenProvider.getId(jwt);
         if(userService.existsById(userId)){
             Boolean pushed = recipeService.pushNewResive(requestRecipe,userId);
             if (!pushed){

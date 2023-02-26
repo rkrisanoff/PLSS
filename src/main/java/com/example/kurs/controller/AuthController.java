@@ -31,13 +31,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity singin(@Valid @RequestBody SigninDto signinDto) {
-        String username = signinDto.getUsername();
-        User user = userService.getByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User with username " + username + " not found");
-        }
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, signinDto.getPassword()));
-        String token = jwtTokenProvider.createToken(user);
+        String token = userService.singin(signinDto);
         return ResponseEntity.ok(token);
     }
 

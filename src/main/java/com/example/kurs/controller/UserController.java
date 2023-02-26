@@ -23,12 +23,12 @@ public class UserController {
 
     @PostMapping("/add-recipe")
     public ResponseEntity<String> createUser(@Valid @RequestBody RecipeDto requestRecipe, @RequestHeader HttpHeaders header) {
-        String jwt=header.getFirst("Authorization");
-        Long userId= jwtTokenProvider.getId(jwt);
-        if(userService.existsById(userId)){
-            Boolean pushed = recipeService.pushNewResive(requestRecipe,userId);
-            if (!pushed){
-                    return ResponseEntity.status(423).body("Failed to create recipe");
+        String jwt = header.getFirst("Authorization");
+        Long userId = jwtTokenProvider.getId(jwt);
+        if (userService.existsById(userId)) {
+            Boolean pushed = recipeService.pushNewResive(requestRecipe, userId);
+            if (!pushed) {
+                return ResponseEntity.status(423).body("Failed to create recipe");
             }
         } else {
             return ResponseEntity.status(422).body("User doesn't exist");
@@ -36,5 +36,5 @@ public class UserController {
 
 
         return ResponseEntity.ok("");
-}
+    }
 }

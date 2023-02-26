@@ -10,39 +10,37 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @ControllerAdvice
 public class AuthExceptionAdvice {
 
 
-    @ExceptionHandler( UsernameNotFoundException.class)
+    @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<Response> handleUsernameNotFoundException(UsernameNotFoundException e) {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler( AuthenticationException.class )
+    @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Response> handleAuthenticationException(AuthenticationException e) {
         Response response = new Response("Invalid username or password -> " + e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler( Exception.class )
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<Response> handleException(Exception e) {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler( UserAlreadyExistsException.class )
+    @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<Response> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.valueOf(409));
     }
 
-    @ExceptionHandler( RecipeNotFoundException.class )
+    @ExceptionHandler(RecipeNotFoundException.class)
     public ResponseEntity<Response> handleRecipeNotFoundException(UserAlreadyExistsException e) {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -52,7 +50,7 @@ public class AuthExceptionAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Response> onMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         StringBuffer responseString = new StringBuffer("");
-        e.getBindingResult().getFieldErrors().stream().map(error ->error.getDefaultMessage()+", ").forEach(error->responseString.append(error));
+        e.getBindingResult().getFieldErrors().stream().map(error -> error.getDefaultMessage() + ", ").forEach(error -> responseString.append(error));
         Response response = new Response(responseString.toString());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

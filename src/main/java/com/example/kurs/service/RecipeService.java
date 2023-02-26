@@ -5,7 +5,6 @@ import com.example.kurs.entity.Kitchen;
 import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.Status;
 import com.example.kurs.repo.RecipeRepo;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +25,7 @@ public class RecipeService {
     public List<Recipe> getRecipesListOnModeration(int page, int size, String sortDir, String sort) {
         PageRequest pageReq
                 = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sort);
-        Page<Recipe> recipes = recipeRepo.findAllByStatus(Status.MODERATION,pageReq);
+        Page<Recipe> recipes = recipeRepo.findAllByStatus(Status.MODERATION, pageReq);
         return recipes.getContent();
     }
 
@@ -80,7 +79,7 @@ public class RecipeService {
 
     public Boolean pushNewResive(RecipeDto recipeDto, Long id) {
         Recipe recipe = recipeDtoToRecipe(recipeDto);
-        if (recipe!=null) {
+        if (recipe != null) {
             recipe.setAuthorId(id);
             recipe.setStatus(Status.MODERATION);
             recipeRepo.save(recipe);
@@ -90,9 +89,10 @@ public class RecipeService {
     }
 
 
-    public Optional<Recipe>  getRecipeOnModerationId(Long id) {
+    public Optional<Recipe> getRecipeOnModerationId(Long id) {
         return recipeRepo.findById(id);
     }
+
     @Transactional
 
     public Integer changeStatus(Long id, Status status) {

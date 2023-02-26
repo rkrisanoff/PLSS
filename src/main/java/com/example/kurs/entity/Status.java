@@ -1,14 +1,16 @@
 package com.example.kurs.entity;
 
 public enum Status {
-    MODERATION ("MODERATION"),
+    MODERATION("MODERATION"),
 
-    APPROVED ("APPROVED"),
-    REJECTED ("REJECTED");
+    APPROVED("APPROVED"),
+    REJECTED("REJECTED");
     private final String name;
+
     Status(String name) {
         this.name = name;
     }
+
     public String getName() {
         return name;
     }

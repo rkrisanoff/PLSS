@@ -9,7 +9,6 @@ import com.example.kurs.repo.UserRepo;
 import com.example.kurs.security.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,7 +41,7 @@ public class UserService {
 
         if (userRepo.findByUsername(user.getUsername()) != null) {
             log.info("User {} registered. Already exists.", user.getUsername());
-            throw new UserAlreadyExistsException("User {} registered. Already exists "+user.getUsername());
+            throw new UserAlreadyExistsException("User {} registered. Already exists " + user.getUsername());
         }
         User registered_user = userRepo.save(user);
         log.info("Registered user {}.", registered_user);
@@ -81,7 +80,8 @@ public class UserService {
         return true;
 
     }
-    private String makeToken(User user,String password){
+
+    private String makeToken(User user, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), password));
         return jwtTokenProvider.createToken(user);
     }
@@ -89,7 +89,7 @@ public class UserService {
     public String singin(SigninDto signinDto) throws UsernameNotFoundException {
         String username = signinDto.getUsername();
         User user = getByUsername(username);
-        return makeToken(user,signinDto.getPassword());
+        return makeToken(user, signinDto.getPassword());
 
     }
 }

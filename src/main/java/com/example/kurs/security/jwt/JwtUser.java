@@ -1,6 +1,5 @@
 package com.example.kurs.security.jwt;
 
-import com.example.kurs.entity.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -36,7 +35,7 @@ public class JwtUser implements UserDetails {
         return username;
     }
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 
@@ -52,7 +51,7 @@ public class JwtUser implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true ;
+        return true;
     }
 
     @Override

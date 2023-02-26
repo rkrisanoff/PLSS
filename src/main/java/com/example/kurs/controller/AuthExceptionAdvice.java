@@ -1,6 +1,7 @@
 package com.example.kurs.controller;
 
 import com.example.kurs.Response;
+import com.example.kurs.exceptions.RecipeNotFoundException;
 import com.example.kurs.exceptions.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,14 @@ public class AuthExceptionAdvice {
     }
 
     @ExceptionHandler( UserAlreadyExistsException.class )
-    public ResponseEntity<Response> handleEUserAlreadyExistsException(UserAlreadyExistsException e) {
+    public ResponseEntity<Response> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.valueOf(409));
+    }
+
+    @ExceptionHandler( RecipeNotFoundException.class )
+    public ResponseEntity<Response> handleRecipeNotFoundException(UserAlreadyExistsException e) {
+        Response response = new Response(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

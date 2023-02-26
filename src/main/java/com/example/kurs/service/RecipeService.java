@@ -5,10 +5,12 @@ import com.example.kurs.entity.Kitchen;
 import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.Status;
 import com.example.kurs.repo.RecipeRepo;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +22,14 @@ import java.util.Optional;
 public class RecipeService {
     @Autowired
     private RecipeRepo recipeRepo;
-    @Autowired
-    private ObjectMapper ObjectMapper;
+
+    public List<Recipe> getRecipesListOnModeration(int page, int size, String sortDir, String sort) {
+        PageRequest pageReq
+                = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sort);
+        Page<Recipe> recipes = recipeRepo.findAllByStatus(Status.MODERATION,pageReq);
+        return recipes.getContent();
+    }
+
 
     public Recipe getById(Long id) {
         Optional<Recipe> recipe = recipeRepo.findById(id);
@@ -81,18 +89,6 @@ public class RecipeService {
         return false;
     }
 
-
-    public String getAllRecipeOnModeration() {
-        String stringForReturn = null;
-        List<Recipe> entities = recipeRepo.findByStatus(Status.MODERATION);
-        try {
-            stringForReturn = ObjectMapper.writeValueAsString(entities);
-        } catch (JsonProcessingException e) {
-            return stringForReturn;
-        }
-
-        return stringForReturn;
-    }
 
     public Optional<Recipe>  getRecipeOnModerationId(Long id) {
         return recipeRepo.findById(id);

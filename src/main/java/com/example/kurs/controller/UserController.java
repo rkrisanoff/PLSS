@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
@@ -21,7 +23,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/add-recipe")
-    public ResponseEntity<String> createUser(@RequestBody RecipeDto requestRecipe, @RequestHeader HttpHeaders header) {
+    public ResponseEntity<String> createUser(@Valid @RequestBody RecipeDto requestRecipe, @RequestHeader HttpHeaders header) {
         String jwt=header.getFirst("Authorization");
         Long userId= jwtTokenProvider.getId(jwt);
         if(userService.existsById(userId)){
@@ -34,6 +36,6 @@ public class UserController {
         }
 
 
-        return ResponseEntity.status(200).body("Success");
+        return ResponseEntity.status(200).body("");
 }
 }

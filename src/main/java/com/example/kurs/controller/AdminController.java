@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -51,7 +52,7 @@ public class AdminController {
         }
     }
     @PatchMapping("/recipe/{id}")
-    public ResponseEntity<String> getRecipeId(@RequestBody StatusDTO statusDTO, @PathVariable("id") Long id) {
+    public ResponseEntity<String> getRecipeId(@Valid @RequestBody StatusDTO statusDTO, @PathVariable("id") Long id) {
 
         try {
             Integer countUpdate = recipeService.changeStatus(id, Status.valueOf(statusDTO.getStatus()));

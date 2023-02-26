@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 
 
 @CrossOrigin
@@ -29,7 +30,7 @@ public class AuthController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity singin(@RequestBody SigninDto signinDto) {
+    public ResponseEntity singin(@Valid @RequestBody SigninDto signinDto) {
         String username = signinDto.getUsername();
         User user = userService.getByUsername(username);
         if (user == null) {
@@ -41,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody SignupDto signupDto) throws Exception {
+    public ResponseEntity signup(@Valid @RequestBody SignupDto signupDto) throws Exception {
         userService.register(signupDto);
         return ResponseEntity.ok("");
     }

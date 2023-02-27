@@ -52,23 +52,23 @@ public class UserService {
         Optional<User> user = Optional.ofNullable(userRepo.findByUsername(username));
         if (!user.isPresent()) {
             log.info("User with username {} not found.", username);
-            throw new UsernameNotFoundException("User with username {} not found.");
+            throw new UsernameNotFoundException("User with username "+username+" not found.");
         }
         log.info("Found user with username {}.", username);
         return user.get();
     }
 
 
-    public User getById(Long id) {
-        Optional<User> user = userRepo.findById(id);
-        if (!user.isPresent()) {
-            log.info("User with id {} not found.", id);
-            return null;
-        }
-        log.info("Found user with id {}.", id);
-        return user.get();
-
-    }
+//    public User getById(Long id) {
+//        Optional<User> user = userRepo.findById(id);
+//        if (!user.isPresent()) {
+//            log.info("User with id {} not found.", id);
+//            return null;
+//        }
+//        log.info("Found user with id {}.", id);
+//        return user.get();
+//
+//    }
 
     public Boolean existsById(Long id) {
         Optional<User> user = userRepo.findById(id);

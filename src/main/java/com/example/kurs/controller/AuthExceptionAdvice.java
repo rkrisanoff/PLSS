@@ -1,6 +1,7 @@
 package com.example.kurs.controller;
 
 import com.example.kurs.Response;
+import com.example.kurs.exceptions.IllegalKitchenException;
 import com.example.kurs.exceptions.RecipeNotFoundException;
 import com.example.kurs.exceptions.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class AuthExceptionAdvice {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Response> handleAuthenticationException(AuthenticationException e) {
-        Response response = new Response("Invalid username or password -> " + e.getMessage());
+        Response response = new Response("Invalid username or password");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -41,7 +42,13 @@ public class AuthExceptionAdvice {
     }
 
     @ExceptionHandler(RecipeNotFoundException.class)
-    public ResponseEntity<Response> handleRecipeNotFoundException(UserAlreadyExistsException e) {
+    public ResponseEntity<Response> handleRecipeNotFoundException(RecipeNotFoundException e) {
+        Response response = new Response(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalKitchenException.class)
+    public ResponseEntity<Response> handleIllegalKitchenException(IllegalKitchenException e) {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -49,8 +56,8 @@ public class AuthExceptionAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Response> onMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        StringBuffer responseString = new StringBuffer("");
-        e.getBindingResult().getFieldErrors().stream().map(error -> error.getDefaultMessage() + ", ").forEach(error -> responseString.append(error));
+        StringBuilder responseString = new StringBuilder();
+        e.getBindingResult().getFieldErrors().stream().map(error -> error.getDefaultMessage() + ", ").forEach(responseString::append);
         Response response = new Response(responseString.toString());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

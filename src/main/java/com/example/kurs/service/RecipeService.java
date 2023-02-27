@@ -4,6 +4,7 @@ import com.example.kurs.dto.RecipeDto;
 import com.example.kurs.entity.Kitchen;
 import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.Status;
+import com.example.kurs.exceptions.IllegalKitchenException;
 import com.example.kurs.repo.RecipeRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,63 +30,43 @@ public class RecipeService {
         return recipes.getContent();
     }
 
-
-    public Recipe getById(Long id) {
-        Optional<Recipe> recipe = recipeRepo.findById(id);
-        if (!recipe.isPresent()) {
-            log.info("Recipe with id {} not found.", id);
-            return null;
-        }
-        log.info("Found recipe with id {}.", id);
-        return recipe.get();
-
-    }
-
-    private Boolean checkTitle(String title) {
-        return title != null && title.length() > 0 && title.length() <= 32;
-    }
-
-    private Boolean checkDescription(String description) {
-        return description != null && description.length() > 0 && description.length() <= 4096;
-    }
-
-    private Boolean checkKitchen(String kitchen) {
-        try {
-            Kitchen.valueOf(kitchen.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-        return true;
+    public List<Recipe> getApprovedRecipesList(int page, int size, String sortDir, String sort) {
+        PageRequest pageReq
+                = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sort);
+        Page<Recipe> recipes = recipeRepo.findAllByStatus(Status.APPROVED, pageReq);
+        return recipes.getContent();
     }
 
 
-    private Boolean checkValidRecipeDto(RecipeDto recipeDto) {
-        String title = recipeDto.getTitle();
-        String description = recipeDto.getDescription();
-        String kitchen = recipeDto.getKitchen();
-        return checkTitle(title) && checkDescription(description) && checkKitchen(kitchen);
-    }
+//    public Recipe getById(Long id) {
+//        Optional<Recipe> recipe = recipeRepo.findById(id);
+//        if (!recipe.isPresent()) {
+//            log.info("Recipe with id {} not found.", id);
+//            return null;
+//        }
+//        log.info("Found recipe with id {}.", id);
+//        return recipe.get();
+//
+//    }
 
-    private Recipe recipeDtoToRecipe(RecipeDto recipeDto) {
+    private Recipe recipeDtoToRecipe(RecipeDto recipeDto) throws IllegalKitchenException {
         Recipe recipe = null;
-        if (checkValidRecipeDto(recipeDto)) {
-            recipe = new Recipe();
-            recipe.setTitle(recipeDto.getTitle());
-            recipe.setDescription(recipeDto.getDescription());
+        recipe = new Recipe();
+        recipe.setTitle(recipeDto.getTitle());
+        recipe.setDescription(recipeDto.getDescription());
+        try {
             recipe.setKitchen(Kitchen.valueOf(recipeDto.getKitchen().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalKitchenException("Illegal kitchen");
         }
         return recipe;
     }
 
-    public Boolean pushNewResive(RecipeDto recipeDto, Long id) {
+    public void addRecipe(RecipeDto recipeDto, Long id) throws Exception {
         Recipe recipe = recipeDtoToRecipe(recipeDto);
-        if (recipe != null) {
-            recipe.setAuthorId(id);
-            recipe.setStatus(Status.MODERATION);
-            recipeRepo.save(recipe);
-            return true;
-        }
-        return false;
+        recipe.setAuthorId(id);
+        recipe.setStatus(Status.MODERATION);
+        recipeRepo.save(recipe);
     }
 
 

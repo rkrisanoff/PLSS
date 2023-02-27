@@ -25,7 +25,7 @@ public class AdminController {
     RecipeService recipeService;
 
 
-    @GetMapping("/recipe/all")
+    @GetMapping("/recipes/all")
     @ResponseBody
     public List<Recipe> getRecipesOnModeration(
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -33,21 +33,21 @@ public class AdminController {
             @RequestParam(value = "sortDir", defaultValue = "ASC") String sortDir,
             @RequestParam(value = "sort", defaultValue = "id") String sort) {
 
-        List<Recipe> recipes = recipeService.getRecipesListOnModeration(page, size, sortDir, sort);
+        List<Recipe> recipes = recipeService.getRecipesListOnModeration(page+1, size, sortDir, sort);
 
         return new ArrayList<>(recipes);
     }
 
-    @GetMapping("/recipe/{id}")
+    @GetMapping("/recipes/{id}")
     public ResponseEntity<Recipe> recipeId(@PathVariable("id") Long id) throws RecipeNotFoundException {
         Optional<Recipe> recipe = recipeService.getRecipeOnModerationId(id);
         if (!recipe.isPresent()) {
-            throw new RecipeNotFoundException("recipe doesn't exist");
+            throw new RecipeNotFoundException("recipe " + id + " doesn't exist");
         }
         return ResponseEntity.ok(recipe.get());
     }
 
-    @PatchMapping("/recipe/{id}")
+    @PatchMapping("/recipes/{id}")
     public ResponseEntity<String> getRecipeId(@RequestBody StatusDTO statusDTO, @PathVariable("id") Long id) {
         Integer countUpdate = recipeService.changeStatus(id, Status.valueOf(statusDTO.getStatus()));
         return new ResponseEntity<>(countUpdate.toString(), HttpStatus.OK);

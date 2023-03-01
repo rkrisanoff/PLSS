@@ -23,13 +23,13 @@ public class AuthController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity singin(@Valid @RequestBody SigninDto signinDto) {
+    public ResponseEntity<String> singin(@Valid @RequestBody SigninDto signinDto) {
         String token = userService.singin(signinDto);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@Valid @RequestBody SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException {
+    public ResponseEntity<String> signup(@Valid @RequestBody SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException {
         userService.register(signupDto);
         return ResponseEntity.ok("");
     }

@@ -2,6 +2,9 @@ package com.example.kurs.controller;
 
 import com.example.kurs.dto.RecipeDto;
 import com.example.kurs.entity.Recipe;
+import com.example.kurs.exceptions.InvalidPageNumberException;
+import com.example.kurs.exceptions.InvalidSizeException;
+import com.example.kurs.exceptions.InvalidSortDirectionException;
 import com.example.kurs.exceptions.JwtAuthenticationException;
 import com.example.kurs.security.jwt.JwtTokenProvider;
 import com.example.kurs.service.RecipeService;
@@ -43,12 +46,13 @@ public class UserController {
     @GetMapping("/recipes/all")
     @ResponseBody
     public List<Recipe> getRecipesOnModeration(
-            @RequestParam(value = "page", defaultValue = "0") int page,
+            @Valid @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(value = "sortDir", defaultValue = "ASC") String sortDir,
-            @RequestParam(value = "sort", defaultValue = "id") String sort) {
+            @RequestParam(value = "sort", defaultValue = "id") String sort) throws InvalidSizeException, InvalidSortDirectionException, InvalidPageNumberException {
 
-        List<Recipe> recipes = recipeService.getApprovedRecipesList(page+1, size, sortDir, sort);
+
+        List<Recipe> recipes = recipeService.getApprovedRecipesList(page-1, size, sortDir, sort);
 
         return new ArrayList<>(recipes);
     }

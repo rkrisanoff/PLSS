@@ -1,9 +1,7 @@
 package com.example.kurs.controller;
 
 import com.example.kurs.Response;
-import com.example.kurs.exceptions.IllegalKitchenException;
-import com.example.kurs.exceptions.RecipeNotFoundException;
-import com.example.kurs.exceptions.UserAlreadyExistsException;
+import com.example.kurs.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -41,11 +39,7 @@ public class AuthExceptionAdvice {
         return new ResponseEntity<>(response, HttpStatus.valueOf(409));
     }
 
-    @ExceptionHandler(RecipeNotFoundException.class)
-    public ResponseEntity<Response> handleRecipeNotFoundException(RecipeNotFoundException e) {
-        Response response = new Response(e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+
 
     @ExceptionHandler(IllegalKitchenException.class)
     public ResponseEntity<Response> handleIllegalKitchenException(IllegalKitchenException e) {

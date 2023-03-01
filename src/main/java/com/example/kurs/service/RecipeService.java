@@ -29,14 +29,14 @@ public class RecipeService {
     private Set<String> sortDirs = Set.of("ASC","DESC");
 
     private void validatePaginationParameters(int page, int size, String sortDir) throws InvalidPageNumberException, InvalidSizeException, InvalidSortDirectionException {
-        if (page <= 0){
-            throw new InvalidPageNumberException("The specified " + page + "is invalid. Page must be greater than zero");
+        if (page < 0){
+            throw new InvalidPageNumberException("The specified " + page + " is invalid. Page must be greater than zero");
         }
         if (size <= 0){
-            throw new InvalidSizeException("The specified " + size + "is invalid");
+            throw new InvalidSizeException("The specified size " + size + " is invalid");
         }
         if (!sortDirs.contains(sortDir)){
-            throw new InvalidSortDirectionException("The specified " + sortDir + "is invalid");
+            throw new InvalidSortDirectionException("The specified sorting direction" + sortDir + " is invalid");
         }
     }
 

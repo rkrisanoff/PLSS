@@ -53,7 +53,7 @@ public class UserController {
             @RequestParam(value = "sort", defaultValue = "id") String sort) throws InvalidSizeException, InvalidSortDirectionException, InvalidPageNumberException {
 
 
-        List<Recipe> recipes = recipeService.getApprovedRecipesList(page-1, size, sortDir, sort);
+        List<Recipe> recipes = recipeService.getApprovedRecipesList(page, size, sortDir, sort);
 
         return new ArrayList<>(recipes);
     }

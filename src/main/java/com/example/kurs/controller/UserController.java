@@ -2,6 +2,7 @@ package com.example.kurs.controller;
 
 import com.example.kurs.dto.RecipeDto;
 import com.example.kurs.entity.Recipe;
+import com.example.kurs.exceptions.JwtAuthenticationException;
 import com.example.kurs.security.jwt.JwtTokenProvider;
 import com.example.kurs.service.RecipeService;
 import com.example.kurs.service.UserService;
@@ -27,8 +28,12 @@ public class UserController {
     @PostMapping("/add-recipe")
     public ResponseEntity<String> addRecipe(@Valid @RequestBody RecipeDto requestRecipe, @RequestHeader HttpHeaders header) throws Exception {
         String jwt = header.getFirst("Authorization");
+        if(jwt==null || jwt.length()<8){
+            throw new JwtAuthenticationException("Your jwt incorrect");
+        }
+        jwt=jwt.substring(7);
         Long userId = jwtTokenProvider.getId(jwt);
-        if (userService.existsById(userId)) {
+        if (!userService.existsById(userId)) {
             throw new Exception("User with id = " + userId + " doesn't exits");
         }
         recipeService.addRecipe(requestRecipe, userId);

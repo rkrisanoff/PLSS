@@ -46,8 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/recipes/all")
-    @ResponseBody
-    public List<Recipe> getRecipesOnModeration(
+    public List<Recipe> getRecipesOnModeration  (
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(value = "sortDir", defaultValue = "ASC") String sortDir,

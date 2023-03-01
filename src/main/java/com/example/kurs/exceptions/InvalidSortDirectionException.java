@@ -1,6 +1,6 @@
 package com.example.kurs.exceptions;
 
-public class InvalidSortDirectionException extends Throwable {
+public class InvalidSortDirectionException extends Exception {
     public InvalidSortDirectionException(String msg) {
         super(msg);
     }

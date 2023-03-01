@@ -3,6 +3,7 @@ package com.example.kurs.controller;
 import com.example.kurs.dto.StatusDTO;
 import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.Status;
+import com.example.kurs.exceptions.InvalidSortDirectionException;
 import com.example.kurs.exceptions.RecipeNotFoundException;
 import com.example.kurs.security.jwt.JwtTokenProvider;
 import com.example.kurs.service.RecipeService;
@@ -31,7 +32,7 @@ public class AdminController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(value = "sortDir", defaultValue = "ASC") String sortDir,
-            @RequestParam(value = "sort", defaultValue = "id") String sort) {
+            @RequestParam(value = "sort", defaultValue = "id") String sort) throws NumberFormatException, InvalidSortDirectionException {
 
         List<Recipe> recipes = recipeService.getRecipesListOnModeration(page, size, sortDir, sort);
 

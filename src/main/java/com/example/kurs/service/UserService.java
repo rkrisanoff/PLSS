@@ -47,8 +47,8 @@ public class UserService {
             log.info("User with  email {} already registered", user.getEmail());
             throw new EmailAlreadyExistsException("User with  email "+user.getEmail()+" already registered" );
         }
-        User registered_user = userRepo.save(user);
-        log.info("Registered user {}.", registered_user);
+        User registeredUser = userRepo.save(user);
+        log.info("Registered user {}.", registeredUser);
     }
 
 

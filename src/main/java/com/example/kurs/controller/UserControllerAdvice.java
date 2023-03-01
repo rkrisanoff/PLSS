@@ -9,12 +9,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 @ControllerAdvice
 
-public class UserControllerAdvice {
-
+public class UserControllerAdvice  {
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<Response> handleNumberFormatException(NumberFormatException e) {
+        Response response = new Response(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
     @ExceptionHandler(InvalidPageNumberException.class)
-    public ResponseEntity<Response> handleInvalidPageNumberException(IllegalKitchenException e) {
+    public ResponseEntity<Response> handleInvalidPageNumberException(InvalidPageNumberException e) {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -23,13 +29,13 @@ public class UserControllerAdvice {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(InvalidPageNumberException.class)
-    public ResponseEntity<Response> handleInvalidSizeException(IllegalKitchenException e) {
+    @ExceptionHandler(InvalidSortDirectionException.class)
+    public ResponseEntity<Response> handleInvalidSortDirectionException(InvalidSortDirectionException e) {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(InvalidSortDirectionException.class)
-    public ResponseEntity<Response> handleInvalidSortDirectionException(IllegalKitchenException e) {
+    @ExceptionHandler(IllegalKitchenException.class)
+    public ResponseEntity<Response> handleIllegalKitchenException(IllegalKitchenException e) {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

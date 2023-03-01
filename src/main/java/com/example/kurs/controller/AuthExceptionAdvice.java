@@ -9,10 +9,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 
 @ControllerAdvice
-public class AuthExceptionAdvice {
+public class AuthExceptionAdvice  {
 
 
     @ExceptionHandler(UsernameNotFoundException.class)
@@ -38,15 +39,6 @@ public class AuthExceptionAdvice {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.valueOf(409));
     }
-
-
-
-    @ExceptionHandler(IllegalKitchenException.class)
-    public ResponseEntity<Response> handleIllegalKitchenException(IllegalKitchenException e) {
-        Response response = new Response(e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Response> onMethodArgumentNotValidException(MethodArgumentNotValidException e) {

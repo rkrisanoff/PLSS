@@ -51,7 +51,7 @@ public class UserController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(value = "sortDir", defaultValue = "ASC") String sortDir,
-            @RequestParam(value = "sort", defaultValue = "id") String sort) {
+            @RequestParam(value = "sort", defaultValue = "id") String sort) throws InvalidSizeException, InvalidSortDirectionException, InvalidPageNumberException {
 
 
         List<Recipe> recipes = recipeService.getApprovedRecipesList(page-1, size, sortDir, sort);

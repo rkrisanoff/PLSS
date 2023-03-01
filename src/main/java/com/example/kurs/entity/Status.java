@@ -2,7 +2,6 @@ package com.example.kurs.entity;
 
 public enum Status {
     MODERATION("MODERATION"),
-
     APPROVED("APPROVED"),
     REJECTED("REJECTED");
     private final String name;

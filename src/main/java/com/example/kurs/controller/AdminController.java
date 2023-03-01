@@ -33,7 +33,7 @@ public class AdminController {
             @RequestParam(value = "sortDir", defaultValue = "ASC") String sortDir,
             @RequestParam(value = "sort", defaultValue = "id") String sort) {
 
-        List<Recipe> recipes = recipeService.getRecipesListOnModeration(page+1, size, sortDir, sort);
+        List<Recipe> recipes = recipeService.getRecipesListOnModeration(page, size, sortDir, sort);
 
         return new ArrayList<>(recipes);
     }

@@ -49,8 +49,8 @@ public class AdminController {
 
     @PatchMapping("/recipes/{id}")
     public ResponseEntity<String> getRecipeId(@RequestBody StatusDTO statusDTO, @PathVariable("id") Long id) {
-        Integer countUpdate = recipeService.changeStatus(id, Status.valueOf(statusDTO.getStatus()));
-        return new ResponseEntity<>(countUpdate.toString(), HttpStatus.OK);
+        recipeService.changeStatus(id, Status.valueOf(statusDTO.getStatus()));
+        return ResponseEntity.ok("");
     }
 
 }

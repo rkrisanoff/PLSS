@@ -62,7 +62,7 @@ public class RecipeService {
         return recipe;
     }
 
-    public void addRecipe(RecipeDto recipeDto, Long id) throws Exception {
+    public void addRecipe(RecipeDto recipeDto, Long id) throws IllegalKitchenException{
         Recipe recipe = recipeDtoToRecipe(recipeDto);
         recipe.setAuthorId(id);
         recipe.setStatus(Status.MODERATION);

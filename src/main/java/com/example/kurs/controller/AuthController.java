@@ -2,6 +2,8 @@ package com.example.kurs.controller;
 
 import com.example.kurs.dto.SigninDto;
 import com.example.kurs.dto.SignupDto;
+import com.example.kurs.exceptions.EmailAlreadyExistsException;
+import com.example.kurs.exceptions.UserAlreadyExistsException;
 import com.example.kurs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@Valid @RequestBody SignupDto signupDto) throws Exception {
+    public ResponseEntity signup(@Valid @RequestBody SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException {
         userService.register(signupDto);
         return ResponseEntity.ok("");
     }

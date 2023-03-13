@@ -1,6 +1,5 @@
 package com.example.kurs.controller;
 
-import com.example.kurs.dto.SigninDto;
 import com.example.kurs.dto.SignupDto;
 import com.example.kurs.exceptions.EmailAlreadyExistsException;
 import com.example.kurs.exceptions.UserAlreadyExistsException;
@@ -22,15 +21,8 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-
-    @PostMapping("/signin")
-    public ResponseEntity<String> singin(@Valid @RequestBody SigninDto signinDto) {
-        String token = userService.singin(signinDto);
-        return ResponseEntity.ok(token);
-    }
-
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException, SystemException {
+    public ResponseEntity<String> signup(@Valid @RequestBody SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException {
         userService.register(signupDto);
         return ResponseEntity.ok("");
     }

@@ -16,6 +16,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 import java.util.Optional;
 
 @Service
@@ -30,25 +33,43 @@ public class UserService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    public void register(SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException {
 
+    @Resource
+    private UserTransaction userTransaction;
 
-        User user = new User();
-        user.setUsername(signupDto.getUsername());
-        user.setEmail(signupDto.getEmail());
-        user.setRole(Role.USER);
+    public void register(SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException, SystemException {
+        try {
+            userTransaction.begin();
+            User user = new User();
+            user.setUsername(signupDto.getUsername());
+            user.setEmail(signupDto.getEmail());
+            user.setRole(Role.USER);
+            user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
+            if (existsByUsername(user.getUsername())) {
+                log.info("User {} registered. Already exists.", user.getUsername());
+                throw new UserAlreadyExistsException("User {} registered. Already exists " + user.getUsername());
+            }
+            if (existsByEmail(user.getEmail())) {
+                log.info("User with  email {} already registered", user.getEmail());
+                throw new EmailAlreadyExistsException("User with  email " + user.getEmail() + " already registered");
+            }
+            User registeredUser = userRepo.save(user);
+            log.info("Registered user {}.", registeredUser);
 
-        user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
-        if (existsByUsername(user.getUsername())) {
-            log.info("User {} registered. Already exists.", user.getUsername());
-            throw new UserAlreadyExistsException("User {} registered. Already exists " + user.getUsername());
+            userTransaction.commit();
+        } catch (Exception e) {
+            if (e instanceof UserAlreadyExistsException) {
+                throw (UserAlreadyExistsException) e;
+            } else {
+                if (e instanceof EmailAlreadyExistsException) {
+                    throw (EmailAlreadyExistsException) e;
+                }
+            }
+            if (userTransaction != null) {
+                userTransaction.rollback();
+            }
+
         }
-        if (existsByEmail(user.getEmail())) {
-            log.info("User with  email {} already registered", user.getEmail());
-            throw new EmailAlreadyExistsException("User with  email "+user.getEmail()+" already registered" );
-        }
-        User registeredUser = userRepo.save(user);
-        log.info("Registered user {}.", registeredUser);
     }
 
 
@@ -56,7 +77,7 @@ public class UserService {
         Optional<User> user = Optional.ofNullable(userRepo.findByUsername(username));
         if (!user.isPresent()) {
             log.info("User with username {} not found.", username);
-            throw new UsernameNotFoundException("User with username "+username+" not found.");
+            throw new UsernameNotFoundException("User with username " + username + " not found.");
         }
         log.info("Found user with username {}.", username);
         return user.get();

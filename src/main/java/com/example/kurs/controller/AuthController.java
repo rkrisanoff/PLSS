@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.SystemException;
 import javax.validation.Valid;
 
 
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException {
+    public ResponseEntity<String> signup(@Valid @RequestBody SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException, SystemException {
         userService.register(signupDto);
         return ResponseEntity.ok("");
     }

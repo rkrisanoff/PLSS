@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.SystemException;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +32,12 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/add-recipe")
-    public ResponseEntity<String> addRecipe(@Valid @RequestBody RecipeDto requestRecipe, @RequestHeader HttpHeaders header) throws IllegalKitchenException,UserAlreadyExistsException {
+    public ResponseEntity<String> addRecipe(@Valid @RequestBody RecipeDto requestRecipe, @RequestHeader HttpHeaders header) throws IllegalKitchenException, UserAlreadyExistsException, SystemException {
         String jwt = header.getFirst("Authorization");
-        if(jwt==null || jwt.length()<8){
+        if (jwt == null || jwt.length() < 8) {
             throw new JwtAuthenticationException("Your jwt incorrect");
         }
-        jwt=jwt.substring(7);
+        jwt = jwt.substring(7);
         Long userId = jwtTokenProvider.getId(jwt);
         if (!userService.existsById(userId)) {
             throw new UserAlreadyExistsException("User with id = " + userId + " doesn't exits");
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/recipes/all")
-    public List<Recipe> getRecipesOnModeration  (
+    public List<Recipe> getRecipesOnModeration(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(value = "sortDir", defaultValue = "ASC") String sortDir,

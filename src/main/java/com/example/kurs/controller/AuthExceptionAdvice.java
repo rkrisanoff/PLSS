@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 
 @ControllerAdvice
-public class AuthExceptionAdvice  {
+public class AuthExceptionAdvice {
 
 
     @ExceptionHandler(UsernameNotFoundException.class)

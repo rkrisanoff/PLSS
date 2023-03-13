@@ -22,7 +22,7 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException, SystemException {
+    public ResponseEntity<String> signup(@Valid @RequestBody SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException {
         userService.register(signupDto);
         return ResponseEntity.ok("");
     }

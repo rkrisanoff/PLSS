@@ -6,12 +6,9 @@ import com.example.kurs.entity.Status;
 import com.example.kurs.exceptions.InvalidPageNumberException;
 import com.example.kurs.exceptions.InvalidSizeException;
 import com.example.kurs.exceptions.InvalidSortDirectionException;
-import com.example.kurs.exceptions.InvalidSortDirectionException;
 import com.example.kurs.exceptions.RecipeNotFoundException;
-import com.example.kurs.security.jwt.JwtTokenProvider;
 import com.example.kurs.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +21,6 @@ import java.util.Optional;
 @RequestMapping("/api/v1/admin")
 
 public class AdminController {
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
     @Autowired
     RecipeService recipeService;
 

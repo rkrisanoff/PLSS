@@ -28,7 +28,7 @@ import java.util.Set;
 public class RecipeService {
     @Autowired
     private RecipeRepo recipeRepo;
-    private Set<String> sortDirs = Set.of("ASC", "DESC");
+    private final Set<String> sortDirs = Set.of("ASC", "DESC");
     @Resource
     private UserTransaction userTransaction;
 
@@ -69,12 +69,12 @@ public class RecipeService {
         try {
             recipe.setKitchen(Kitchen.valueOf(recipeDto.getKitchen().toUpperCase()));
         } catch (IllegalArgumentException e) {
-            throw new IllegalKitchenException("Illegal kitchen");
+            throw new IllegalKitchenException("Illegal kitchen " +recipeDto.getKitchen() );
         }
         return recipe;
     }
 
-    public void addRecipe(RecipeDto recipeDto, Long id) throws IllegalKitchenException, SystemException {
+    public void addRecipe(RecipeDto recipeDto, Long id) throws SystemException {
         try {
             userTransaction.begin();
             Recipe recipe = recipeDtoToRecipe(recipeDto);
@@ -96,7 +96,7 @@ public class RecipeService {
     }
 
     public Integer changeStatus(Long id, Status status) throws SystemException {
-        Integer changedLines = 0;
+        int changedLines = 0;
         try {
             userTransaction.begin();
             changedLines = recipeRepo.setStatusForRecipe(status, id);

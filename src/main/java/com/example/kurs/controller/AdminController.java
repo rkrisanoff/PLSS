@@ -32,7 +32,6 @@ public class AdminController {
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(value = "sortDir", defaultValue = "ASC") String sortDir,
             @RequestParam(value = "sort", defaultValue = "id") String sort) throws InvalidSizeException, InvalidSortDirectionException, InvalidPageNumberException {
-
         List<Recipe> recipes = recipeService.getRecipesListOnModeration(page, size, sortDir, sort);
 
         return new ArrayList<>(recipes);

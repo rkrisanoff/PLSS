@@ -2,7 +2,6 @@ package com.example.kurs.config;
 
 import org.springframework.context.annotation.Bean;
 import javax.transaction.UserTransaction;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.jta.JtaTransactionManager;
 @Configuration

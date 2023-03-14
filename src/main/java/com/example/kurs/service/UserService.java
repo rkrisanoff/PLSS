@@ -1,6 +1,5 @@
 package com.example.kurs.service;
 
-import com.example.kurs.dto.SigninDto;
 import com.example.kurs.dto.SignupDto;
 import com.example.kurs.entity.Role;
 import com.example.kurs.entity.User;
@@ -9,8 +8,6 @@ import com.example.kurs.exceptions.UserAlreadyExistsException;
 import com.example.kurs.repo.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,14 +24,11 @@ public class UserService {
     private UserRepo userRepo;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
 
     @Resource
     private UserTransaction userTransaction;
+
+
 
     public void register(SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException, SystemException {
         try {
@@ -110,18 +104,6 @@ public class UserService {
         }
         log.info("Found user with email {}.", email);
         return true;
-
-    }
-
-    private String makeToken(User user, String password) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), password));
-        return jwtTokenProvider.createToken(user);
-    }
-
-    public String singin(SigninDto signinDto) throws UsernameNotFoundException {
-        String username = signinDto.getUsername();
-        User user = getByUsername(username);
-        return makeToken(user, signinDto.getPassword());
 
     }
 }

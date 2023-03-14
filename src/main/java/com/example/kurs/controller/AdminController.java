@@ -47,7 +47,7 @@ public class AdminController {
     }
 
     @PatchMapping("/recipes/{id}")
-    public ResponseEntity<String> getRecipeId(@RequestBody StatusDTO statusDTO, @PathVariable("id") Long id) throws SystemException {
+    public ResponseEntity<String> getRecipeId(@RequestBody StatusDTO statusDTO, @PathVariable("id") Long id) throws SystemException, RecipeNotFoundException {
         recipeService.changeStatus(id, Status.valueOf(statusDTO.getStatus()));
         return ResponseEntity.ok("");
     }

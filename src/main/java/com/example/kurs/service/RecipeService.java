@@ -4,10 +4,7 @@ import com.example.kurs.dto.RecipeDto;
 import com.example.kurs.entity.Kitchen;
 import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.Status;
-import com.example.kurs.exceptions.IllegalKitchenException;
-import com.example.kurs.exceptions.InvalidPageNumberException;
-import com.example.kurs.exceptions.InvalidSizeException;
-import com.example.kurs.exceptions.InvalidSortDirectionException;
+import com.example.kurs.exceptions.*;
 import com.example.kurs.repo.RecipeRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,17 +92,22 @@ public class RecipeService {
         return recipeRepo.findById(id);
     }
 
-    public Integer changeStatus(Long id, Status status) throws SystemException {
+    public void changeStatus(Long id, Status status) throws SystemException, RecipeNotFoundException {
         int changedLines = 0;
         try {
             userTransaction.begin();
+            if(!recipeRepo.existsById(id)){
+                throw new RecipeNotFoundException("I love you, but we have not this recipe: "+ id);
+            }
             changedLines = recipeRepo.setStatusForRecipe(status, id);
             userTransaction.commit();
         } catch (Exception e) {
             if (userTransaction != null) {
                 userTransaction.rollback();
             }
+            if (e instanceof RecipeNotFoundException){
+                throw (RecipeNotFoundException) e;
+            }
         }
-        return changedLines;
     }
 }

@@ -7,7 +7,6 @@ import com.example.kurs.entity.User;
 import com.example.kurs.exceptions.EmailAlreadyExistsException;
 import com.example.kurs.exceptions.UserAlreadyExistsException;
 import com.example.kurs.repo.UserRepo;
-import com.example.kurs.security.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

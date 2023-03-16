@@ -11,13 +11,18 @@
 <groupId>com.example</groupId>
 <artifactId>kurs</artifactId>
 <version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 <name>Kursach</name>
-<description>fuck you</description>
+
 <properties>
 	<java.version>1.8</java.version>
 	<jsonwebtoken.version>0.8.0</jsonwebtoken.version>
 	<start-class>com.example.kurs.BLSSApplication</start-class>
+
+	<deploy.jboss.host>127.0.0.1</deploy.jboss.host>
+	<deploy.jboss.port>9990</deploy.jboss.port>
+	<deploy.jboss.username>drukhary</deploy.jboss.username>
+	<deploy.jboss.password>drukhary</deploy.jboss.password>
 </properties>
 
 <dependencies>
@@ -33,6 +38,7 @@
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-web</artifactId>
+
 	</dependency>
 	<dependency>
 		<groupId>javax.transaction</groupId>
@@ -40,13 +46,12 @@
 		<version>1.1</version>
 	</dependency>
 
-
-	<!-- JSON Web Token lib -->
 	<dependency>
-		<groupId>io.jsonwebtoken</groupId>
-		<artifactId>jjwt</artifactId>
-		<version>${jsonwebtoken.version}</version>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-tomcat</artifactId>
+		<scope>provided</scope>
 	</dependency>
+
 
 	<!-- Lombok -->
 	<dependency>
@@ -77,6 +82,12 @@
 		<artifactId>postgresql</artifactId>
 		<version>42.5.1</version>
 	</dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+
 
 	<dependency>
 		<groupId>io.swagger.core.v3</groupId>
@@ -113,6 +124,26 @@
 				<target>9</target>
 			</configuration>
 		</plugin>
+<!--		<plugin>-->
+<!--			<groupId>org.wildfly.plugins</groupId>-->
+<!--			<artifactId>wildfly-maven-plugin</artifactId>-->
+<!--			<version>2.0.2.Final</version>-->
+<!--			<executions>-->
+<!--				<execution>-->
+<!--					<phase>install</phase>-->
+<!--					<goals>-->
+<!--						<goal>deploy</goal>-->
+<!--					</goals>-->
+<!--				</execution>-->
+<!--			</executions>-->
+<!--			<configuration>-->
+<!--				<filename>${project.build.finalName}.war</filename>-->
+<!--				<hostname>${deploy.jboss.host}</hostname>-->
+<!--				<port>${deploy.jboss.port}</port>-->
+<!--				<username>${deploy.jboss.username}</username>-->
+<!--				<password>${deploy.jboss.password}</password>-->
+<!--			</configuration>-->
+<!--		</plugin>-->
 
 	</plugins>
 </build>

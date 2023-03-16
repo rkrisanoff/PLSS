@@ -1,5 +1,0 @@
-- validation - everywhere anton
-- remade code errors on sign in anton
-- paging roma
-- ControllerAdvice roma
-- delegate бизнес logic to services anton

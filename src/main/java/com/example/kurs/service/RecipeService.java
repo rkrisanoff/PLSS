@@ -93,13 +93,12 @@ public class RecipeService {
     }
 
     public void changeStatus(Long id, Status status) throws SystemException, RecipeNotFoundException {
-        int changedLines = 0;
         try {
             userTransaction.begin();
             if(!recipeRepo.existsById(id)){
                 throw new RecipeNotFoundException("I love you, but we have not this recipe: "+ id);
             }
-            changedLines = recipeRepo.setStatusForRecipe(status, id);
+            recipeRepo.setStatusForRecipe(status, id);
             userTransaction.commit();
         } catch (Exception e) {
             if (userTransaction != null) {

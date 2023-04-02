@@ -1,10 +1,13 @@
 package com.example.kurs.service;
 
 import com.example.kurs.dto.SignupDto;
+import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.Role;
 import com.example.kurs.entity.User;
 import com.example.kurs.exceptions.EmailAlreadyExistsException;
+import com.example.kurs.exceptions.RecipeNotFoundException;
 import com.example.kurs.exceptions.UserAlreadyExistsException;
+import com.example.kurs.exceptions.UserNotFoundException;
 import com.example.kurs.repo.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,6 @@ public class UserService {
 
     @Resource
     private UserTransaction userTransaction;
-
 
 
     public void register(SignupDto signupDto) throws UserAlreadyExistsException, EmailAlreadyExistsException, SystemException {
@@ -84,6 +86,14 @@ public class UserService {
         }
         log.info("Found user with id {}.", id);
         return true;
+    }
+
+    public User getUser(Long id) throws UserNotFoundException {
+        Optional<User> optionalUser = userRepo.findById(id);
+        if (!optionalUser.isPresent()) {
+            throw new UserNotFoundException("I love you, but we have not this user: " + id);
+        }
+        return optionalUser.get();
     }
 
     public Boolean existsByUsername(String username) {

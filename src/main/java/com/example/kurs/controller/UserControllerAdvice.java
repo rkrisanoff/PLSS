@@ -1,10 +1,7 @@
 package com.example.kurs.controller;
 
 import com.example.kurs.Response;
-import com.example.kurs.exceptions.IllegalKitchenException;
-import com.example.kurs.exceptions.InvalidPageNumberException;
-import com.example.kurs.exceptions.InvalidSortDirectionException;
-import com.example.kurs.exceptions.RecipeNotFoundException;
+import com.example.kurs.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,6 +24,12 @@ public class UserControllerAdvice {
 
     @ExceptionHandler(RecipeNotFoundException.class)
     public ResponseEntity<Response> handleRecipeNotFoundException(RecipeNotFoundException e) {
+        Response response = new Response(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Response> handleUserNotFoundException(UserNotFoundException e) {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

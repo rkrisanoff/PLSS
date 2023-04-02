@@ -1,5 +1,6 @@
 package com.example.kurs.service;
 
+import com.example.kurs.RabbitEmailAlert.service.MailService;
 import com.example.kurs.dto.RecipeDto;
 import com.example.kurs.entity.Kitchen;
 import com.example.kurs.entity.Recipe;
@@ -25,6 +26,8 @@ import java.util.Set;
 public class RecipeService {
     @Autowired
     private RecipeRepo recipeRepo;
+    @Autowired
+    MailService mailService;
     private final Set<String> sortDirs = Set.of("ASC", "DESC");
     @Resource
     private UserTransaction userTransaction;
@@ -66,7 +69,7 @@ public class RecipeService {
         try {
             recipe.setKitchen(Kitchen.valueOf(recipeDto.getKitchen().toUpperCase()));
         } catch (IllegalArgumentException e) {
-            throw new IllegalKitchenException("Illegal kitchen " +recipeDto.getKitchen() );
+            throw new IllegalKitchenException("Illegal kitchen " + recipeDto.getKitchen());
         }
         return recipe;
     }
@@ -87,6 +90,14 @@ public class RecipeService {
         }
     }
 
+    public Recipe getRecipe(Long id) throws RecipeNotFoundException {
+        Optional<Recipe> optionalRecipe = recipeRepo.findById(id);
+        if (!optionalRecipe.isPresent()) {
+            throw new RecipeNotFoundException("I love you, but we have not this recipe: " + id);
+        }
+        return optionalRecipe.get();
+    }
+
 
     public Optional<Recipe> getRecipeOnModerationId(Long id) {
         return recipeRepo.findById(id);
@@ -95,16 +106,17 @@ public class RecipeService {
     public void changeStatus(Long id, Status status) throws SystemException, RecipeNotFoundException {
         try {
             userTransaction.begin();
-            if(!recipeRepo.existsById(id)){
-                throw new RecipeNotFoundException("I love you, but we have not this recipe: "+ id);
+            if (!recipeRepo.existsById(id)) {
+                throw new RecipeNotFoundException("I love you, but we have not this recipe: " + id);
             }
             recipeRepo.setStatusForRecipe(status, id);
             userTransaction.commit();
+            mailService.statusСhangeRecipeEmailAlert(getRecipe(id));
         } catch (Exception e) {
             if (userTransaction != null) {
                 userTransaction.rollback();
             }
-            if (e instanceof RecipeNotFoundException){
+            if (e instanceof RecipeNotFoundException) {
                 throw (RecipeNotFoundException) e;
             }
         }

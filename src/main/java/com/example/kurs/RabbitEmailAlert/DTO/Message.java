@@ -1,7 +1,6 @@
 package com.example.kurs.RabbitEmailAlert.DTO;
 
 
-import kotlinx.serialization.Serializable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +10,6 @@ import javax.validation.constraints.Size;
 
 @RequiredArgsConstructor
 @Getter
-@Serializable
 public class Message {
     @NotNull(message = "subject is null")
     @Size(min = 5, max = 50, message = "subject wrong size")

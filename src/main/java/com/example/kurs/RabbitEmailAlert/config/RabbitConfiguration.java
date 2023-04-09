@@ -13,19 +13,15 @@ import org.springframework.context.annotation.Configuration;
 @EnableRabbit
 @Configuration
 public class RabbitConfiguration {
-    @Value("${rabbitmq.QUEUE_FOR_EMAIL}")
-    private static String QUEUE_FOR_EMAIL;
-    @Value("${rabbitmq.EXCHANGE_NAME}")
-    private static String EXCHANGE_NAME;
-    @Value("${rabbitmq.ROUTING_KEY}")
-    private static String ROUTING_KEY;
-    @Value("${rabbitmq.HOST}")
-    private static String HOST;
+
+    public static final String QUEUE_FOR_EMAIL = "queueForEmail";
+    public static final String EXCHANGE_NAME = "exchangeOne";
+    public static final String ROUTING_KEY = "recipeStatusUpdate";
 
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory =
-                new CachingConnectionFactory(HOST);
+                new CachingConnectionFactory("localhost");
         return connectionFactory;
     }
 

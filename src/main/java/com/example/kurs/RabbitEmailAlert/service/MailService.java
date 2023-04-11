@@ -9,7 +9,11 @@ import com.example.kurs.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.messaging.support.GenericMessage;
+import org.json.JSONObject;
+
 
 @Service
 public class MailService {
@@ -18,14 +22,17 @@ public class MailService {
     @Autowired
     UserService userService;
     @Autowired
-    RabbitService rabbitService;
+    MqttReceiveHandle mqttReceiveHandle;
     @Autowired
     ObjectMapper objectMapper;
 
     public void statusСhangeRecipeEmailAlert(Recipe recipe) throws UserNotFoundException, JsonProcessingException {
         Message message = makeMessageStatusСhangeRecipe(recipe);
         String jsonForSend= messageToJson(message);
-        rabbitService.sendMailStatusChangeRecipe(jsonForSend);
+        byte[] payload = jsonForSend.getBytes();
+        org.springframework.messaging.Message<byte[]> ms = new GenericMessage<>(payload);
+//        rabbitService.sendMailStatusChangeRecipe(jsonForSend);
+        mqttReceiveHandle.handle(ms);
 
     }
 

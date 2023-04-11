@@ -1,6 +1,6 @@
 package com.example.kurs.controller;
 
-import com.example.kurs.RabbitEmailAlert.service.RabbitService;
+
 import com.example.kurs.dto.StatusDTO;
 import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.Status;
@@ -25,8 +25,6 @@ import java.util.Optional;
 public class AdminController {
     @Autowired
     RecipeService recipeService;
-    @Autowired
-    RabbitService rabbitService;
 
 
     @GetMapping("/recipes/all")

@@ -8,11 +8,14 @@ import com.example.kurs.service.RecipeService;
 import com.example.kurs.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.messaging.support.GenericMessage;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 
 @Service
@@ -31,7 +34,6 @@ public class MailService {
         String jsonForSend= messageToJson(message);
         byte[] payload = jsonForSend.getBytes();
         org.springframework.messaging.Message<byte[]> ms = new GenericMessage<>(payload);
-//        rabbitService.sendMailStatusChangeRecipe(jsonForSend);
         mqttReceiveHandle.handle(ms);
 
     }
@@ -46,11 +48,11 @@ public class MailService {
         User user = userService.getUser(recipe.getAuthorId());
 
         String subject = String.format("Смена статуса у рецепта: %s", recipe.getTitle());
-        String emailAddres = user.getEmail();
+        String emailAddress = user.getEmail();
         String text = String.format("Привет %s! Мы отправляем это письмо, " +
-                "чтоб оповестить тебя о том, что твоей рецепт %s был" +
-                " проверен админестратором и ему был установлен статус %s", user.getUsername(), recipe.getTitle(), recipe.getStatus());
-        return new Message(subject, emailAddres, text);
+                "чтоб оповестить тебя о том, что твой рецепт %s был" +
+                " проверен администратором и ему был установлен статус %s", user.getUsername(), recipe.getTitle(), recipe.getStatus(), new Date());
+        return new Message(subject, emailAddress, text);
     }
 
 

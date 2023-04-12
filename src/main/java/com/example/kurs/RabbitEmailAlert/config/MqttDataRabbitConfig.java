@@ -25,7 +25,7 @@ public class MqttDataRabbitConfig {
     }
 
     @Bean
-    Binding bindingEmailSend(Queue OneQueue, DirectExchange directExchange) {
+    Binding bindingYihonWqmMessage(Queue OneQueue, DirectExchange directExchange) {
         return BindingBuilder.bind(OneQueue).to(directExchange).with("EmailSend");
     }
 

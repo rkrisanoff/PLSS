@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MqttDataRabbitConfig {
 
-    final static String TOPIC_NAME = "topic.EmailSend";
+    final static String TOPIC_NAME = "topic.mqtt.EmailSend";
 
 
     @Bean

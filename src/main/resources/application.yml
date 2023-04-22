@@ -45,3 +45,5 @@ jwt:
     expire: 3600000
 server:
   port: 6969
+app:
+  mqtt-broker-url: tcp://127.0.0.1:1883

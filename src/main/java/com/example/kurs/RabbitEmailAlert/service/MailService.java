@@ -1,6 +1,7 @@
 package com.example.kurs.RabbitEmailAlert.service;
 
 import com.example.kurs.RabbitEmailAlert.DTO.Message;
+import com.example.kurs.RabbitEmailAlert.config.MqttRabbitMQConfig;
 import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.User;
 import com.example.kurs.exceptions.UserNotFoundException;
@@ -25,7 +26,7 @@ public class MailService {
     @Autowired
     UserService userService;
     @Autowired
-    MqttReceiveHandle mqttReceiveHandle;
+    MqttRabbitMQConfig.MqttDataSenderGateway mqttDataSenderGateway;
     @Autowired
     ObjectMapper objectMapper;
 
@@ -34,7 +35,7 @@ public class MailService {
         String jsonForSend= messageToJson(message);
         byte[] payload = jsonForSend.getBytes();
         org.springframework.messaging.Message<byte[]> ms = new GenericMessage<>(payload);
-        mqttReceiveHandle.handle(ms);
+        mqttDataSenderGateway.sendToMqtt(jsonForSend, "bindingKey");
 
     }
 

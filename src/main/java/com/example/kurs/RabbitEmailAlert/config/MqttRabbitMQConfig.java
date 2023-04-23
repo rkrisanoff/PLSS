@@ -1,6 +1,8 @@
 package com.example.kurs.RabbitEmailAlert.config;
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,7 +50,15 @@ public class MqttRabbitMQConfig {
         messageHandler.setDefaultTopic("exampleQueue");
         return messageHandler;
     }
+    @Bean
+    public Queue createQueue() {
+        return new Queue("exampleQueue");
+    }
 
+    @Bean
+    public Binding createBindingBetweenQueueAndMqttTopic() {
+        return new Binding("exampleQueue", Binding.DestinationType.QUEUE, "amq.topic", "bindingKey", null);
+    }
     @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel")
     public interface MqttDataSenderGateway {
         void sendToMqtt(String data, @Header(MqttHeaders.TOPIC) String topic);

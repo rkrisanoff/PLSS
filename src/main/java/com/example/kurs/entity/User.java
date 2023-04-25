@@ -15,6 +15,8 @@ public class User {
     private String username;
     private String password;
     private String email;
+    @Column(name="favorite_recipe_id")
+    private Long favoriteRecipeId;
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;

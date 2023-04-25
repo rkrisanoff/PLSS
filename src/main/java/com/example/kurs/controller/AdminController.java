@@ -4,10 +4,7 @@ package com.example.kurs.controller;
 import com.example.kurs.dto.StatusDTO;
 import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.Status;
-import com.example.kurs.exceptions.InvalidPageNumberException;
-import com.example.kurs.exceptions.InvalidSizeException;
-import com.example.kurs.exceptions.InvalidSortDirectionException;
-import com.example.kurs.exceptions.RecipeNotFoundException;
+import com.example.kurs.exceptions.*;
 import com.example.kurs.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +46,7 @@ public class AdminController {
     }
 
     @PatchMapping("/recipes/{id}")
-    public ResponseEntity<String> getRecipeId(@RequestBody StatusDTO statusDTO, @PathVariable("id") Long id) throws SystemException, RecipeNotFoundException {
+    public ResponseEntity<String> getRecipeId(@RequestBody StatusDTO statusDTO, @PathVariable("id") Long id) throws SystemException, RecipeNotFoundException, UserNotFoundException {
         recipeService.changeStatus(id, Status.valueOf(statusDTO.getStatus()));
         return ResponseEntity.ok("");
     }

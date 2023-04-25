@@ -32,6 +32,7 @@ public class MqttRabbitMQConfig {
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
         MqttConnectOptions options = new MqttConnectOptions();
         options.setServerURIs(new String[] {MQTT_BROKER_URL});
+
         factory.setConnectionOptions(options);
         return factory;
     }

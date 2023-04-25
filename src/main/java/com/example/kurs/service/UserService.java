@@ -1,5 +1,8 @@
 package com.example.kurs.service;
 
+import com.example.kurs.RabbitEmailAlert.DTO.DeleteFavoriteRecipeMessageDto;
+import com.example.kurs.RabbitEmailAlert.config.MqttGateway;
+import com.example.kurs.dto.FavoriteRecipeMessageDto;
 import com.example.kurs.dto.SignupDto;
 import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.Role;
@@ -8,7 +11,9 @@ import com.example.kurs.exceptions.EmailAlreadyExistsException;
 import com.example.kurs.exceptions.RecipeNotFoundException;
 import com.example.kurs.exceptions.UserAlreadyExistsException;
 import com.example.kurs.exceptions.UserNotFoundException;
+import com.example.kurs.repo.RecipeRepo;
 import com.example.kurs.repo.UserRepo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,10 +29,16 @@ import java.util.Optional;
 @Slf4j
 public class UserService {
     @Autowired
+    private RecipeRepo recipeRepo;
+    @Autowired
     private UserRepo userRepo;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+@Autowired
+    MqttGateway mqttGateway;
 
+@Autowired
+    ObjectMapper mapper;
     @Resource
     private UserTransaction userTransaction;
 
@@ -67,6 +78,72 @@ public class UserService {
         }
     }
 
+public Optional<Recipe> getFavoriteRecipe(String username) throws UserNotFoundException, RecipeNotFoundException {
+        User user = userRepo.findByUsername(username);
+        if (user==null){
+            throw new UserNotFoundException("User "+username+" doesn't exist");
+        }
+        if (user.getFavoriteRecipeId()==null){
+            throw new RecipeNotFoundException("The user hasn't a favourite recipe");
+        }
+    return recipeRepo.findById(user.getFavoriteRecipeId());
+}
+    public void deleteFavoriteRecipe(String username) throws UserNotFoundException, SystemException {
+        try {
+            User user = userRepo.findByUsername(username);
+            if (user == null) {
+                throw new UserNotFoundException("qwerty");
+            }
+            user.setFavoriteRecipeId(null);
+            userRepo.save(user);
+            log.info("delete favorite recipe set");
+            DeleteFavoriteRecipeMessageDto deleteFavoriteRecipeMessageDto = new DeleteFavoriteRecipeMessageDto();
+            deleteFavoriteRecipeMessageDto.setEmail(user.getEmail());
+            String jsonForSend= mapper.writeValueAsString(deleteFavoriteRecipeMessageDto);
+            mqttGateway.sendToMqtt("deleteFavoriteRecipe",false,jsonForSend);
+        } catch (Exception e) {
+            if (e instanceof UserNotFoundException) {
+                throw (UserNotFoundException) e;
+            }
+
+            if (userTransaction != null) {
+                userTransaction.rollback();
+            }
+
+        }
+    }
+    public void setFavoriteRecipe(String username,Long favoriteRecipeId) throws RecipeNotFoundException, UserNotFoundException, SystemException {
+        try {
+            User user = userRepo.findByUsername(username);
+            if (user==null){
+                throw new UserNotFoundException("qwerty");
+            }
+            Optional<Recipe> recipe = recipeRepo.findById(favoriteRecipeId);
+            if(!recipe.isPresent()){
+                throw new RecipeNotFoundException("qwerty");
+            }
+            user.setFavoriteRecipeId(favoriteRecipeId);
+            userRepo.save(user);
+            log.info("new favorite recipe set");
+
+            FavoriteRecipeMessageDto favoriteRecipeMessageDto = new FavoriteRecipeMessageDto();
+            favoriteRecipeMessageDto.setTitle(recipe.get().getTitle());
+            favoriteRecipeMessageDto.setEmail(user.getEmail());
+            favoriteRecipeMessageDto.setText(recipe.get().getDescription());
+            String jsonForSend= mapper.writeValueAsString(favoriteRecipeMessageDto);
+            mqttGateway.sendToMqtt("setFavoriteRecipe",false,jsonForSend);
+        } catch (Exception e) {
+            if (e instanceof UserNotFoundException) {
+                throw (UserNotFoundException) e;
+            }
+                if (e instanceof RecipeNotFoundException) {
+                    throw (RecipeNotFoundException) e;
+                }
+            if (userTransaction != null) {
+                userTransaction.rollback();
+            }
+        }
+    }
 
     public User getByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = Optional.ofNullable(userRepo.findByUsername(username));

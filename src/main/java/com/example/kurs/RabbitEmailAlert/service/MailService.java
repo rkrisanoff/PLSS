@@ -21,8 +21,6 @@ import java.util.Date;
 @Service
 public class MailService {
     @Autowired
-    RecipeService recipeService;
-    @Autowired
     UserService userService;
     @Autowired
     MqttReceiveHandle mqttReceiveHandle;

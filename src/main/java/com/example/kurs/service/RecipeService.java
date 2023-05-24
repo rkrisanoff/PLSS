@@ -103,7 +103,7 @@ public class RecipeService {
         return recipeRepo.findById(id);
     }
 
-    public void changeStatus(Long id, Status status) throws SystemException, RecipeNotFoundException, UserNotFoundException {
+    public void changeStatus(Long id, Status status) throws SystemException, RecipeNotFoundException {
         try {
             userTransaction.begin();
             if (!recipeRepo.existsById(id)) {
@@ -113,17 +113,11 @@ public class RecipeService {
             userTransaction.commit();
             mailService.statusСhangeRecipeEmailAlert(getRecipe(id));
         } catch (Exception e) {
-
+            if (userTransaction != null) {
+                userTransaction.rollback();
+            }
             if (e instanceof RecipeNotFoundException) {
                 throw (RecipeNotFoundException) e;
-            }
-            if (e instanceof  UserNotFoundException){
-                throw (UserNotFoundException) e;
-            }
-            e.printStackTrace();
-            if (userTransaction != null) {
-                System.out.println(userTransaction.getStatus());
-                userTransaction.rollback();
             }
         }
     }

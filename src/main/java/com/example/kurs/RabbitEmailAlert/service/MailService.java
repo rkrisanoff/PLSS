@@ -1,7 +1,6 @@
 package com.example.kurs.RabbitEmailAlert.service;
 
 import com.example.kurs.RabbitEmailAlert.DTO.Message;
-import com.example.kurs.RabbitEmailAlert.config.MqttGateway;
 import com.example.kurs.RabbitEmailAlert.config.MqttRabbitMQConfig;
 import com.example.kurs.entity.Recipe;
 import com.example.kurs.entity.User;
@@ -31,20 +30,19 @@ public class MailService {
     @Autowired
     ObjectMapper objectMapper;
 
-    @Autowired MqttGateway mqttGateway;
-
     public void statusСhangeRecipeEmailAlert(Recipe recipe) throws UserNotFoundException, JsonProcessingException {
         Message message = makeMessageStatusСhangeRecipe(recipe);
         String jsonForSend= messageToJson(message);
         byte[] payload = jsonForSend.getBytes();
         org.springframework.messaging.Message<byte[]> ms = new GenericMessage<>(payload);
-        mqttGateway.sendToMqtt("setApproveRecipe",true,jsonForSend);
+        mqttDataSenderGateway.sendToMqtt(jsonForSend, "bindingKey");
 
     }
 
 
     private String messageToJson(Message message) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(message);
+        String jsonString = objectMapper.writeValueAsString(message);
+        return jsonString;
     }
 
     private Message makeMessageStatusСhangeRecipe(Recipe recipe) throws UserNotFoundException {
@@ -54,7 +52,7 @@ public class MailService {
         String emailAddress = user.getEmail();
         String text = String.format("Привет %s! Мы отправляем это письмо, " +
                 "чтоб оповестить тебя о том, что твой рецепт %s был" +
-                " проверен администратором и ему был установлен статус %s", user.getUsername(), recipe.getTitle(), recipe.getStatus());
+                " проверен администратором и ему был установлен статус %s", user.getUsername(), recipe.getTitle(), recipe.getStatus(), new Date());
         return new Message(subject, emailAddress, text);
     }
 
